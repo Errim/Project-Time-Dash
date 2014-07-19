@@ -9,7 +9,7 @@ import java.awt.*;
  */
 
 public class Actor extends Entity {
-	public static final float GRAVITY_FACTOR = 350f;
+	public static final float GRAVITY_FACTOR = 600f;
 
 	public enum face {RIGHT, LEFT}
 	public face facing = face.RIGHT;
@@ -22,7 +22,8 @@ public class Actor extends Entity {
 		this.facing = facing;
 	}
 
-	public boolean is_in_air() { return y > 100; }
+	public boolean is_in_air() { return y < 100; }
+	public boolean is_on_ground() { return y > 100 - 2; }
 
 	public void logic() {
 		yspeed += GRAVITY_FACTOR * Game.delta_time;

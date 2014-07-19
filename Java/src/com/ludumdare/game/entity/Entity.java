@@ -12,10 +12,12 @@ public class Entity {
 
 	public int getWidth() { return (int)width; }
 	public int getHeight() { return (int)height; }
-	public int getX() { return (int)x; }
-	public int getY() { return (int)y; }
-	public int getScreenX() { return getX(); }
-	public int getScreenY() { return getY(); }
+	public float getX() { return x; }
+	public float getY() { return y; }
+	public int getIntX() { return (int)getX(); }
+	public int getIntY() { return (int)getY(); }
+	public int getScreenX() { return getIntX(); }
+	public int getScreenY() { return getIntY(); }
 
 	public Entity(float x, float y, float height, float width, boolean collision) {
 		this.x = x;

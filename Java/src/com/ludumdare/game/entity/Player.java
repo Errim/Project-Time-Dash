@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
  */
 
 public class Player extends Actor {
-	private static final float acceleration = 500, max_speed = 400, friction = 800, friction_air = 300, jump_force = 1200, jump_hold_inc = 200, jump_hold_limit = 400;
+	private static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40;
 
 	public enum states {GROUND, AIR, WALL};
 	public states state;
@@ -22,9 +22,13 @@ public class Player extends Actor {
 	}
 
 	public void jump() {
-		if (is_in_air()) return;
-
-		
+		if (!is_on_ground()) {
+			if (-yspeed > jump_hold_limit) {
+				yspeed -= jump_hold_inc * Game.delta_time;
+			}
+		} else {
+			yspeed = -jump_force;
+		}
 	}
 
 	public void dash() {
@@ -34,13 +38,18 @@ public class Player extends Actor {
 	}
 
 	public void logic() {
+		super.logic();
+
 		KeyboardInput in = InputEngine.getKeyboardInput();
 
-		float f = is_in_air() ? friction_air : friction;
+		float f = is_on_ground() ? friction : friction_air;
 
-		if (in.isKeyDown(KeyEvent.VK_RIGHT)) xspeed += (acceleration + f) * Game.delta_time;
-		if (in.isKeyDown(KeyEvent.VK_LEFT)) xspeed -= (acceleration + f) * Game.delta_time;
-		if (in.isKeyDown(KeyEvent.VK_X))
+		if (xspeed > 0) xspeed = Math.max(0, xspeed - f * Game.delta_time);
+		if (xspeed < 0) xspeed = Math.min(0, xspeed + f * Game.delta_time);
+
+		if (in.isKeyDown(KeyEvent.VK_RIGHT)) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
+		if (in.isKeyDown(KeyEvent.VK_LEFT)) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+		if (in.isKeyDown(KeyEvent.VK_X)) jump();
 	}
 
 	public void draw(Graphics g) {

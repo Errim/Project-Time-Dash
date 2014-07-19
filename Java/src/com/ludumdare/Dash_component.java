@@ -1,5 +1,8 @@
 package com.ludumdare;
 
+import com.emilstrom.input.InputEngine;
+import com.ludumdare.game.Game;
+
 import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
@@ -16,6 +19,10 @@ public class Dash_component extends Applet implements Runnable {
 
 	public Dash_component() {
 		this.setPreferredSize(new Dimension(GAME_W * GAME_S, GAME_H * GAME_S));
+
+		InputEngine ie = new InputEngine();
+
+		this.addKeyListener(ie);
 	}
 
 	public void start() {
@@ -40,18 +47,21 @@ public class Dash_component extends Applet implements Runnable {
 
 		long prev_time = System.nanoTime();
 
+		Game game = new Game();
+
 		while(running) {
 			//Delta time
 			long new_time = System.nanoTime();
 			float delta_time = (new_time - prev_time) * 0.000000001f;  //Seconds
 			prev_time = new_time;
+			Game.delta_time = delta_time;
 
 			//Logic
-			//game.logic()
+			game.logic();
 
 			//Draw
 			bbg.clearRect(0, 0, GAME_W, GAME_H);
-			//game.draw(bbg);
+			game.draw(bbg);
 			bbg.drawString(Integer.toString((int)(1f / delta_time)), 2, 12);
 			g.drawImage(back_buffer, 0, 0, GAME_W * GAME_S, GAME_H * GAME_S, 0, 0, GAME_W, GAME_H, null);
 
