@@ -27,27 +27,30 @@ public class Actor extends Entity {
 	public boolean is_in_air() { return y < 100; }
 	public boolean is_on_ground() { return y > 100 - 2; }
 
+	public float minabs(float a, float b) {
+		if (Math.abs(a) <= Math.abs(b)) {
+			return a;
+		} else {
+			return b;
+		}
+	}
+
 	public void logic(Environment environment) {
 		if (!flying) {
 			yspeed += GRAVITY_FACTOR * Game.delta_time;
 		}
 
-		//Temp bounce
-		if (y + yspeed * Game.delta_time > 100) yspeed *= -0.1f;
-		//if (x + xspeed * Game.delta_time < 0) xspeed *= -0.2f;
-
-		/*This collision detection might just work*/
 		float x_new = x + xspeed * Game.delta_time;
 		float y_new = y + yspeed * Game.delta_time;
 
-		if (environment.tile_clear(x_new, y)) { x = x_new; }
+		if (environment.tile_clear(x_new, y) && environment.tile_clear(x_new + width, y)) { x = x_new; }
 		else {
-			x += environment.dist_x(x, x_new, y);
+			x += minabs(environment.dist_x(x, x_new, y), environment.dist_x(x + width, x_new, y));
 			xspeed = 0;
 		}
-		if (environment.tile_clear(x, y_new)) { y = y_new; }
+		if (environment.tile_clear(x, y_new) && environment.tile_clear(x, y_new + height)) { y = y_new; }
 		else {
-			y += environment.dist_y(y, x, y_new);
+			y += minabs(environment.dist_y(y, x, y_new), environment.dist_y(y + height, x, y_new));
 			yspeed = 0;
 		}
 	}
