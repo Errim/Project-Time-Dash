@@ -22,11 +22,7 @@ public class Game {
 	public Environment environment;
 
 	public Game() {
-<<<<<<< HEAD
 		player = new Player(36, 0, 16, 16, true, Actor.face.RIGHT, this);
-=======
-		player = new Player(0, 0, 16, 16, true, Actor.face.RIGHT);
->>>>>>> 4a50d59716f2d537b271d183a2acf92ea0af3f23
 		environment = new Environment();
 		environment.tiles[0] = 1;
 	}

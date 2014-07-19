@@ -17,6 +17,8 @@ public class Entity {
 	public int get_height() { return (int)height; }
 	public int get_x() { return (int)x; }
 	public int get_y() { return (int)y; }
+	public int get_center_x() { return (int)x + (int)(width/2); }
+	public int get_center_y() { return (int)y + (int)(height/2); }
 	public int get_int_x() { return (int)get_x(); }
 	public int get_int_y() { return (int)get_y(); }
 	public int get_screen_x() { return get_x(); }
