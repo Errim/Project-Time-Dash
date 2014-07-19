@@ -40,10 +40,10 @@ public class Actor extends Entity {
 		float x_new = x + xspeed * Game.delta_time;
 		float y_new = y + yspeed * Game.delta_time;
 
-		if (environment.tile_clear((int)x_new, (int)y)) { x = x_new; }
-		else { x += environment.dist_x((int)x, (int)x_new, (int)y); }
-		if (environment.tile_clear((int)x, (int)y_new)) { y = y_new; }
-		else { y += environment.dist_y((int)y, (int)x, (int)y_new); }
+		if (environment.tile_clear(x_new, y)) { x = x_new; }
+		else { x += environment.dist_x(x, x_new, y); }
+		if (environment.tile_clear(x, y_new)) { y = y_new; }
+		else { y += environment.dist_y(y, x, y_new); }
 	}
 
 	public void draw(Graphics g) {
