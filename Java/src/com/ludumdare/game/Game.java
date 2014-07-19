@@ -16,7 +16,7 @@ public class Game {
 
 	public Game() {
 		player = new Player(0, 0, 16, 16, true, Actor.face.RIGHT);
-		Environment environment = new Environment();
+		environment = new Environment();
 		environment.tiles[0] = 1;
 	}
 	public void logic() {

@@ -12,7 +12,7 @@ public class Environment {
 			tile_width = 32, tile_height = 32; /* 30x20 */
 	public int tiles[];
 
-	public boolean tile_clear(int x, int y) {
+	public boolean tile_clear(float x, float y) {
 		return (tiles[find_tile(x, y)] == 0);
 	}
 	public int find_tile(float x, float y) {
@@ -24,13 +24,13 @@ public class Environment {
 	public int get_y(int tile) {
 		return get_yth(tile) * tile_height;
 	}
-	public int dist_x(int x, int tile_x, int tile_y) {
+	public float dist_x(float x, float tile_x, float tile_y) {
 		int left = get_x(find_tile(tile_x, tile_y));
 		int right = left + tile_width;
 		if (Math.abs(x - left) < Math.abs(x - right)) { return x - left; }
 		else { return x - right; }
 	}
-	public int dist_y(int y, int tile_x, int tile_y) {
+	public float dist_y(float y, float tile_x, float tile_y) {
 		int up = get_y(find_tile(tile_x, tile_y));
 		int down = up + tile_height;
 		if (Math.abs(y - up) < Math.abs(y - down)) { return y - up; }
