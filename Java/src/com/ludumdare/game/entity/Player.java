@@ -111,7 +111,7 @@ public class Player extends Actor {
 		KeyboardInput in = InputEngine.getKeyboardInput();
 		if (old_input == null) old_input = in;
 
-		if (is_on_ground() && yspeed >= 0) jump_points = 2;
+		if (is_on_ground() && yspeed >= 0) jump_points = 1;
 
 		float f = is_on_ground() ? friction : friction_air;
 
@@ -120,9 +120,9 @@ public class Player extends Actor {
 
 		if (in.isKeyDown(KeyEvent.VK_RIGHT)) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
 		if (in.isKeyDown(KeyEvent.VK_LEFT)) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
-		if (in.isKeyDown(KeyEvent.VK_X)) jump_hold();
-		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) jump();
-		if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) dash();
+		if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
+		if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) jump();
+		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
 
 		//Record position LEL
 		dash_record_timer += Game.delta_time;
