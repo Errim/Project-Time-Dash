@@ -25,7 +25,7 @@ public class Actor extends Entity {
 	}
 
 	public boolean is_in_air() { return game.environment.tile_clear(x, y); }
-	public boolean is_on_ground() { return !game.environment.tile_clear(x, y+2); }
+	public boolean is_on_ground() { return !game.environment.tile_clear(x, y + height + 2); }
 
 	public float minabs(float a, float b) {
 		return Math.abs(a) <= Math.abs(b) ? a : b;

@@ -10,9 +10,6 @@ import com.ludumdare.game.helper.Art;
 public class Environment {
 	private int num_wide = 30, num_high = 20,
 			tile_width = 32, tile_height = 32;
-	public int left_border = 0, up_border = 0,
-			right_border = tile_width * num_wide,
-			down_border = tile_height * num_high;
 	public int tiles[];
 
 	public boolean tile_clear(float x, float y) {
@@ -30,16 +27,12 @@ public class Environment {
 		return get_yth(tile) * tile_height;
 	}
 	public float dist_x(float x, float tile_x, float tile_y) {
-		if (tile_x < left_border) { return x - left_border; } /* TODO - Border stuff does not work as well as tile stuff */
-		else if (tile_x > right_border) { return x - right_border; }
 		int left = get_x(find_tile(tile_x, tile_y));
 		int right = left + tile_width;
 		if (Math.abs(x - left) < Math.abs(x - right)) { return x - left; }
 		else { return x - right; }
 	}
 	public float dist_y(float y, float tile_x, float tile_y) {
-		if (tile_y < up_border) { return y - up_border; } /* TODO - Border stuff does not work as well as tile stuff */
-		else if (tile_y > down_border) { return y - down_border; }
 		int up = get_y(find_tile(tile_x, tile_y));
 		int down = up + tile_height;
 		if (Math.abs(y - up) < Math.abs(y - down)) { return y - up; }
