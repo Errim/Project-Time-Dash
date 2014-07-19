@@ -13,3 +13,4 @@ hs_err_pid*
 
 # this be causing all sorts of problems mon
 Java/.idea/workspace.xml
+*workspace*
