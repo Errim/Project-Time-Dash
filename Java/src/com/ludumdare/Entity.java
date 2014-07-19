@@ -5,7 +5,7 @@ package com.ludumdare;
  */
 
 public class Entity {
-    public float x, y, height, width;
+	public float x, y, height, width;
 	public boolean collision;
 
 	public Entity(float x, float y, float height, float width, boolean collision) {
