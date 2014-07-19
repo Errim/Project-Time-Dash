@@ -41,13 +41,16 @@ public class Effect_blood {
 			if (alpha <= 0) return;
 
 			g.setColor(new Color(1f, 0f, 0f, alpha));
-			g.fillRect((int)x, (int)y, (int)size, (int)size);
+			g.fillRect((int)x - game.game_screen.get_x(), (int)y - game.game_screen.get_y(), (int)size, (int)size);
 		}
 	}
 
+	Game game;
 	Particle particle_list[] = new Particle[60];
 
-	public Effect_blood(float x, float y, float dir) {
+	public Effect_blood(float x, float y, float dir, Game game) {
+		this.game = game;
+
 		for(int i=0; i<particle_list.length; i++) {
 			float particle_dir = dir + (float)GameMath.getRndDouble(-20f, 20f),
 					particle_force = (float)GameMath.getRndDouble(150f, 1250f),

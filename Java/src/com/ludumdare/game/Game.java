@@ -4,6 +4,7 @@ import com.ludumdare.game.entity.Actor;
 import com.ludumdare.game.entity.Enemy;
 import com.ludumdare.game.entity.Player;
 import com.ludumdare.game.entity.Enemy;
+import com.ludumdare.game.helper.GameScreen;
 import com.ludumdare.game.helper.Timer;
 
 import java.awt.*;
@@ -20,11 +21,13 @@ public class Game {
 	Timer enemy_spawn_timer = new Timer(2f, false);
 
 	public Environment environment;
+	public GameScreen game_screen;
 
 	public Game() {
 		player = new Player(36, 0, 16, 16, true, Actor.face.RIGHT, this);
-		environment = new Environment();
-		environment.tiles[0] = 1;
+		environment = new Environment(this);
+
+		game_screen = new GameScreen(this);
 	}
 
 	public void spawn_enemy() {
@@ -51,6 +54,8 @@ public class Game {
 			spawn_enemy();
 			enemy_spawn_timer.reset();
 		}
+
+		game_screen.logic();
 	}
 
 	public void draw(Graphics g) {

@@ -30,8 +30,8 @@ public class Player_shadow {
 
 	public int get_x() { return (int) get_position()[0]; }
 	public int get_y() { return (int) get_position()[1]; }
-	public int get_screen_x() { return get_x(); }
-	public int get_screen_y() { return get_y(); }
+	public int get_screen_x() { return get_x() - player.game.game_screen.get_x(); }
+	public int get_screen_y() { return get_y() - player.game.game_screen.get_y(); }
 	public int get_width() { return (int)player.width; }
 	public int get_height() { return (int)player.height; }
 

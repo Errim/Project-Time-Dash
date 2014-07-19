@@ -21,8 +21,8 @@ public class Entity {
 	public int get_center_y() { return (int)y + (int)(height/2); }
 	public int get_int_x() { return (int)get_x(); }
 	public int get_int_y() { return (int)get_y(); }
-	public int get_screen_x() { return get_x(); }
-	public int get_screen_y() { return get_y(); }
+	public int get_screen_x() { return get_x() - game.game_screen.get_x(); }
+	public int get_screen_y() { return get_y() - game.game_screen.get_y(); }
 
 	public boolean collides_with(Entity e) { return collides_with(e.get_x(), e.get_y(), e.get_width(), e.get_height()); }
 	public boolean collides_with(float xx, float yy, float w, float h) {

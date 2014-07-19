@@ -8,6 +8,8 @@ import com.ludumdare.game.helper.Art;
  */
 
 public class Environment {
+	Game game;
+
 	private int num_wide = 30, num_high = 20,
 			tile_width = 32, tile_height = 32;
 	public int tiles[];
@@ -44,7 +46,9 @@ public class Environment {
 			if (tiles[i] != 0) { draw_tile(g, i); }
 		}
 	}
-	public Environment() {
+	public Environment(Game game) {
+		this.game = game;
+
 		int map_width = Art.map.getWidth();
 		int map_height = Art.map.getHeight();
 		int[] map_data = new int[map_width * map_height];
@@ -76,6 +80,6 @@ public class Environment {
 	}
 	private void draw_tile(Graphics g, int tile) {
 		g.setColor(Color.black);
-		g.drawRect(get_x(tile), get_y(tile), tile_width, tile_height);
+		g.drawRect(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), tile_width, tile_height);
 	}
 }

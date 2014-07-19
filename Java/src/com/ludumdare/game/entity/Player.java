@@ -70,7 +70,7 @@ public class Player extends Actor {
 		float dir = (float)GameMath.getDirection(x, y, dash_x, dash_y),
 				len = (float)GameMath.getDistance(x, y, dash_x, dash_y);
 
-		effect_dash = new Effect_dash(get_center_x(), get_center_y(), dash_x + width/2, dash_y + height/2);
+		effect_dash = new Effect_dash(get_center_x(), get_center_y(), dash_x + width/2, dash_y + height/2, game);
 
 		//KILL STUFF YEYEYEEYYE AHDUIAWHDHWID FEELS GOOD AROUND MY DICK
 		final int precision = (int)(len / 5);
