@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 /**
  * Created by Emil on 2014-07-19.
  */
+
 public class Dash_component extends Applet implements Runnable {
 	public static final int GAME_W = 400, GAME_H = 300, GAME_S = 2;
 	private boolean running = false;
