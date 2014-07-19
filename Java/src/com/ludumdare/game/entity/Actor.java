@@ -19,8 +19,8 @@ public class Actor extends Entity {
 	//Physics
 	float xspeed=0f, yspeed=0f;
 
-	public Actor(float x, float y, float height, float width, boolean collision, face facing) {
-		super(x, y, height, width, collision);
+	public Actor(float x, float y, float height, float width, boolean collision, face facing, Game game) {
+		super(x, y, height, width, collision, game);
 		this.facing = facing;
 	}
 
@@ -28,17 +28,18 @@ public class Actor extends Entity {
 	public boolean is_on_ground() { return y > 100 - 2; }
 
 	public void logic(Environment environment) {
-
 		if (!flying) {
 			yspeed += GRAVITY_FACTOR * Game.delta_time;
 		}
 
 		//Temp bounce
-		if (y + yspeed * Game.delta_time > 100) yspeed *= -0.4f;
+		if (y + yspeed * Game.delta_time > 100) yspeed *= -0.1f;
+		if (x + xspeed * Game.delta_time < 0) xspeed *= -0.2f;
 
 		/*This collision detection might just work*/
 		float x_new = x + xspeed * Game.delta_time;
 		float y_new = y + yspeed * Game.delta_time;
+
 		if (environment.tile_clear((int)x_new, (int)y)) { x = x_new; }
 		else { x += environment.dist_x((int)x, (int)x_new, (int)y); }
 		if (environment.tile_clear((int)x, (int)y_new)) { y = y_new; }

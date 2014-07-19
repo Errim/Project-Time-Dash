@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
  */
 
 public class Dash_component extends Applet implements Runnable {
-	public static final int GAME_W = 400, GAME_H = 300, GAME_S = 2;
+	public static final int GAME_W = 200, GAME_H = 150, GAME_S = 4;
 	private boolean running = false;
 
 	Thread game_thread;
@@ -61,7 +61,8 @@ public class Dash_component extends Applet implements Runnable {
 			game.logic();
 
 			//Draw
-			bbg.clearRect(0, 0, GAME_W, GAME_H);
+			bbg.setColor(new Color(0.5f, 0.5f, 0.5f));
+			bbg.fillRect(0, 0, GAME_W, GAME_H);
 			game.draw(bbg);
 			bbg.drawString(Integer.toString((int)(1f / delta_time)), 2, 12);
 			g.drawImage(back_buffer, 0, 0, GAME_W * GAME_S, GAME_H * GAME_S, 0, 0, GAME_W, GAME_H, null);
