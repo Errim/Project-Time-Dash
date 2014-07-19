@@ -78,6 +78,6 @@ public class Environment {
 	}
 	private void draw_tile(Graphics g, int tile) {
 		g.setColor(Color.black);
-		g.drawRect(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), tile_width, tile_height);
+		g.fillRect(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), tile_width, tile_height);
 	}
 }
