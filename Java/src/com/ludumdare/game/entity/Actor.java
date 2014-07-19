@@ -13,6 +13,7 @@ public class Actor extends Entity {
 
 	public enum face {RIGHT, LEFT}
 	public face facing = face.RIGHT;
+	public boolean flying = false;
 
 	//Physics
 	float xspeed=0f, yspeed=0f;
@@ -26,7 +27,10 @@ public class Actor extends Entity {
 	public boolean is_on_ground() { return y > 100 - 2; }
 
 	public void logic() {
-		yspeed += GRAVITY_FACTOR * Game.delta_time;
+
+		if (!flying) {
+			yspeed += GRAVITY_FACTOR * Game.delta_time;
+		}
 
 		//Temp bounce
 		if (y + yspeed * Game.delta_time > 100) yspeed *= -0.4f;
