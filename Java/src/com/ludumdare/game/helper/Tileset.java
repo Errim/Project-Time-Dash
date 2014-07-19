@@ -1,6 +1,7 @@
 package com.ludumdare.game.helper;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.RescaleOp;
@@ -37,7 +38,6 @@ public class Tileset {
 		float[] values = { 1f, 1f, 1f, opacity };
 		float[] offset = new float[4];
 		RescaleOp rop = new RescaleOp(values, offset, null);
-
-		((Graphics2D)g).drawImage(i, rop, x, y);
+		((Graphics2D) g).drawImage(i, rop, x, y);
 	}
 }

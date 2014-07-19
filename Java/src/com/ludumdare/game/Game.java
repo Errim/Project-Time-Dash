@@ -43,7 +43,7 @@ public class Game {
 	}
 
 	public void logic() {
-		player.logic(environment);
+		player.logic();
 		for(Enemy e : enemy_list) if (e != null) e.logic();
 
 		enemy_spawn_timer.logic();

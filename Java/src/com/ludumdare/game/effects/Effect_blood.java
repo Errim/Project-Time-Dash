@@ -45,7 +45,7 @@ public class Effect_blood {
 		}
 	}
 
-	Particle particle_list[] = new Particle[40];
+	Particle particle_list[] = new Particle[60];
 
 	public Effect_blood(float x, float y, float dir) {
 		for(int i=0; i<particle_list.length; i++) {
@@ -53,6 +53,11 @@ public class Effect_blood {
 					particle_force = (float)GameMath.getRndDouble(150f, 1250f),
 					particle_alpha = (float)GameMath.getRndDouble(0.4f, 1f),
 					particle_size = (float)GameMath.getRndDouble(1f, 4f);
+
+			if (i > particle_list.length - 20) {
+				particle_dir = (float)GameMath.getRndDouble(0, 360);
+				particle_force = (float)GameMath.getRndDouble(60f, 300f);
+			}
 
 			particle_list[i] = new Particle(x, y, particle_dir, particle_force, particle_alpha, particle_size);
 		}

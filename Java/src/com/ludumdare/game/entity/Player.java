@@ -99,7 +99,7 @@ public class Player extends Actor {
 	public void slide() {
 	}
 
-	public void logic(Environment environment) {
+	public void logic() {
 		animation_run.logic(Math.abs(xspeed) / max_speed);
 		animation_idle.logic(1f);
 
@@ -138,7 +138,7 @@ public class Player extends Actor {
 
 		old_input = in;
 
-		super.logic(environment);
+		super.logic();
 
 		player_shadow.logic();
 	}
