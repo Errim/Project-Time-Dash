@@ -12,10 +12,11 @@ public class Environment {
 			tile_width = 32, tile_height = 32;
 	public int tiles[];
 
-	public boolean tile_clear(float x, float y) {
-		int tile = find_tile(x, y);
-		if (tile < 0 || tile >= tiles.length) { return false; }
-		return (tiles[tile] == 0);
+	public boolean collision(float x, float y, float width, float height) {
+		return (tile_clear(x, y)
+				&& tile_clear(x + width, y)
+				&& tile_clear(x, y + height)
+				&& tile_clear(x + width, y + height));
 	}
 	public int find_tile(float x, float y) {
 		return get_tile((int)(x / tile_width), (int)(y / tile_height));
@@ -59,6 +60,11 @@ public class Environment {
 		}
 	}
 	/* Private */
+	private boolean tile_clear(float x, float y) {
+		int tile = find_tile(x, y);
+		if (tile < 0 || tile >= tiles.length) { return false; }
+		return (tiles[tile] == 0);
+	}
 	private int get_tile(int xth, int yth) {
 		return (num_wide * yth) + xth;
 	}

@@ -88,7 +88,7 @@ public class Player_shadow {
 
 	public boolean is_on_ground() {
 		float pos[] = get_position();
-		return (!player.game.environment.tile_clear(pos[0], pos[1] + get_height() + 2));
+		return (!player.game.environment.collision(pos[0], pos[1] + 2, get_width(), get_height()));
 	}
 
 	public void logic() {
