@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
  */
 
 public class Dash_component extends Applet implements Runnable {
-	public static final int GAME_W = 200, GAME_H = 150, GAME_S = 4;
+	public static final int GAME_W = 400, GAME_H = 300, GAME_S = 3;
 	private boolean running = false;
 
 	Thread game_thread;

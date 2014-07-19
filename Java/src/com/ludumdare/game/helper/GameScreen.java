@@ -24,7 +24,18 @@ public class GameScreen {
 	public int get_y() { return (int)y; }
 
 	public void logic() {
-		x = game.player.get_center_x() - width / 2;
-		y = game.player.get_center_y() - height / 2;
+		float target_x, target_y;
+
+		if (game.player.can_dash()) {
+			float shadow_position[] = game.player.player_shadow.get_position();
+			target_x = (game.player.get_center_x() + shadow_position[0]) / 2 - width / 2;
+			target_y = (game.player.get_center_y() + shadow_position[1]) / 2 - height / 2;
+		} else {
+			target_x = game.player.get_center_x() - width / 2;
+			target_y = game.player.get_center_y() - height / 2;
+		}
+
+		x += (target_x - x) * 12.0f * Game.delta_time;
+		y += (target_y - y) * 12.0f * Game.delta_time;
 	}
 }

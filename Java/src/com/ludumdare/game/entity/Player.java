@@ -32,13 +32,13 @@ public class Player extends Actor {
 	//Dashing stuff
 	public static final float dash_length = 0.6f, dash_accuracy = 50f; //IN SECONDS WHOO
 
-	Player_shadow player_shadow;
+	public Player_shadow player_shadow;
 
 	float dash_record_timer = 0f;
 	float dash_ability_value = 0f;
 
 	//Double jumping
-	int jump_points = 2;
+	int jump_points = 1;
 
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -49,7 +49,7 @@ public class Player extends Actor {
 		if (jump_points <= 0) return;
 
 		yspeed = -jump_force;
-		jump_points--;
+		if (!is_on_ground()) jump_points--;
 	}
 
 	public void jump_hold() {
@@ -57,6 +57,8 @@ public class Player extends Actor {
 			yspeed -= jump_hold_inc * Game.delta_time;
 		}
 	}
+
+	public boolean can_dash() { return dash_ability_value >= 1f; }
 
 	public void dash() {
 		if (dash_ability_value < 1f) return;
@@ -94,6 +96,7 @@ public class Player extends Actor {
 		player_shadow.dash();
 
 		dash_ability_value -= 1f;
+		jump_points = 1;
 	}
 
 	public void slide() {
