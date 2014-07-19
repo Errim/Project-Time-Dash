@@ -19,11 +19,8 @@ public class Player_shadow {
 	float xspeed, yspeed;
 	int look_dir = 1;
 
-	//Dashing stuff
-	static final float dash_length = 1.2f, dash_accuracy = 50f; //IN SECONDS WHOO
-
-	float dash_list_x[] = new float[(int)(dash_accuracy * dash_length * 2)];
-	float dash_list_y[] = new float[(int)(dash_accuracy * dash_length * 2)];
+	float dash_list_x[] = new float[(int)(Player.dash_accuracy * Player.dash_length * 2)];
+	float dash_list_y[] = new float[(int)(Player.dash_accuracy * Player.dash_length * 2)];
 	int dash_list_i = 0;
 
 	public Player_shadow(Player p) {
@@ -86,7 +83,7 @@ public class Player_shadow {
 		float pos1[] = get_position(index);
 		float pos2[] = get_position((int) GameMath.mod(index - 1, dash_list_x.length));
 
-		return new float[]{(pos1[0] - pos2[0]) * dash_accuracy, (pos1[1] - pos2[1]) * dash_accuracy};
+		return new float[]{(pos1[0] - pos2[0]) * Player.dash_accuracy, (pos1[1] - pos2[1]) * Player.dash_accuracy};
 	}
 
 	public boolean is_on_ground() {
@@ -95,6 +92,8 @@ public class Player_shadow {
 	}
 
 	public void logic() {
+		if (player.dash_ability_value < 1f) return;
+
 		float current_speed[] = get_speed();
 		xspeed = current_speed[0];
 		yspeed = current_speed[1];
@@ -106,22 +105,21 @@ public class Player_shadow {
 	}
 
 	public void draw(Graphics g) {
+		if (player.dash_ability_value < 1f) return;
+
 		boolean flip_sprite = look_dir == 1 ? false : true;
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 0.01f) {
-				animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
+				animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, 0.4f, g);
 			}
 			else
-				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
+				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, 0.4f, g);
 		} else {
 			if (yspeed > 0)
-				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, g);
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, 0.4f, g);
 			else
-				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, g);
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, 0.4f, g);
 		}
-
-		g.setColor(Color.BLACK);
-		g.drawString(Float.toString(xspeed) + "|" + Float.toString(yspeed), get_screen_x(), get_screen_y() - 12);
 	}
 }

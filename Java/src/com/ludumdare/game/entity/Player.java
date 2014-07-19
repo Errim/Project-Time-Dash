@@ -30,12 +30,12 @@ public class Player extends Actor {
 	KeyboardInput old_input;
 
 	//Dashing stuff
-	static final float dash_length = 1.2f, dash_accuracy = 50f; //IN SECONDS WHOO
+	public static final float dash_length = 0.6f, dash_accuracy = 50f; //IN SECONDS WHOO
 
 	Player_shadow player_shadow;
 
 	float dash_record_timer = 0f;
-	float dash_ability_value = 2f;
+	float dash_ability_value = 0f;
 
 	//Double jumping
 	int jump_points = 2;
@@ -70,7 +70,7 @@ public class Player extends Actor {
 		float dir = (float)GameMath.getDirection(x, y, dash_x, dash_y),
 				len = (float)GameMath.getDistance(x, y, dash_x, dash_y);
 
-		effect_dash = new Effect_dash(x, y, dir, len);
+		effect_dash = new Effect_dash(get_center_x(), get_center_y(), dash_x + width/2, dash_y + height/2);
 
 		//KILL STUFF YEYEYEEYYE AHDUIAWHDHWID FEELS GOOD AROUND MY DICK
 		final int precision = (int)(len / 5);
@@ -129,8 +129,8 @@ public class Player extends Actor {
 		}
 
 		//Update dash ability value
-		dash_ability_value += Game.delta_time / dash_length;
-		if (dash_ability_value > 2f) dash_ability_value = 2f;
+		dash_ability_value += Game.delta_time / dash_length * 0.6f;
+		if (dash_ability_value > 1f) dash_ability_value = 1f;
 
 		//Direction
 		if (xspeed > 0) facing = face.RIGHT;

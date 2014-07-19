@@ -9,14 +9,16 @@ import java.awt.*;
  * Created by Emil on 2014-07-19.
  */
 public class Effect_dash {
-	float x, y, dir, len;
-	Timer effect_timer = new Timer(0.6f, false);
+	float x, y, target_x, target_y, dir, len;
+	Timer effect_timer = new Timer(0.5f, false);
 
-	public Effect_dash(float x, float y, float dir, float len) {
+	public Effect_dash(float x, float y, float target_x, float target_y) {
 		this.x = x;
 		this.y = y;
-		this.dir = dir;
-		this.len = len;
+		this.target_x = target_x;
+		this.target_y = target_y;
+		dir = (float)GameMath.getDirection(x, y, target_x, target_y);
+		len = (float)GameMath.getDistance(x, y, target_x, target_y);
 	}
 
 	public void logic() {
@@ -28,7 +30,7 @@ public class Effect_dash {
 	public void draw(Graphics g) {
 		if (effect_timer.isDone()) return;
 
-		float factor = (float)Math.pow(Math.E, -effect_timer.percentageDone() * 10f);
+		float factor = (float)Math.pow(Math.E, -effect_timer.percentageDone() * 5f);
 
 		Polygon p = new Polygon();
 		p.addPoint((int)(x - GameMath.lengthDirX(dir, 5)), (int)(y - GameMath.lengthDirY(dir, 5)));
@@ -38,5 +40,10 @@ public class Effect_dash {
 
 		g.setColor(Color.WHITE);
 		g.fillPolygon(p);
+
+		float r = (1 - factor) * 40f;
+
+		g.setColor(new Color(1f, 1f, 1f, 1 - effect_timer.percentageDone()));
+		g.drawOval((int)(target_x - r), (int)(target_y - r), (int)(r*2), (int)(r*2));
 	}
 }

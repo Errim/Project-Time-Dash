@@ -29,9 +29,12 @@ public class Animation {
 	}
 
 	public void draw(int x, int y, Graphics g) {
-		tileset.drawTile(x, y, origin_x + (int)frame_index, origin_y, g);
+		draw(x, y, false, 1f, g);
 	}
 	public void draw(int x, int y, boolean flip, Graphics g) {
-		tileset.drawTile(x, y, origin_x + (int)frame_index, origin_y, flip, g);
+		draw(x, y, flip, 1f, g);
+	}
+	public void draw(int x, int y, boolean flip, float opacity, Graphics g) {
+		tileset.drawTile(x, y, origin_x + (int)frame_index, origin_y, flip, opacity, g);
 	}
 }
