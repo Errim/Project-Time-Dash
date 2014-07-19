@@ -24,7 +24,7 @@ public class Enemy extends Actor {
 
 	public void kill(float dir) {
 		health = 0;
-		effect_blood = new Effect_blood(get_x(), get_y(), dir, game);
+		effect_blood = new Effect_blood(get_center_x(), get_center_y(), dir, game);
 	}
 
 	public void logic() {

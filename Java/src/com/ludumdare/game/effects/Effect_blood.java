@@ -13,17 +13,28 @@ public class Effect_blood {
 		float x, y,
 			xspeed, yspeed, size, rotation;
 
-		float alpha;
+		float alpha, redness;
 
-		public Particle(float x, float y, float dir, float force, float a, float size, float rotation) {
+		Polygon p;
+
+		public Particle(float x, float y, float dir, float force, float a, float redness, float size, float rotation) {
 			this.x = x;
 			this.y = y;
 
 			xspeed = (float)GameMath.lengthDirX(dir, force);
 			yspeed = (float)GameMath.lengthDirY(dir, force);
 			alpha = a;
+			this.redness = redness;
 			this.size = size;
 			this.rotation = rotation;
+
+			p = new Polygon();
+			for(int i=0; i<4; i++) {
+				float v_dir = (360f / 4f) * i + 45,
+						v_len = size;
+
+				p.addPoint((int)GameMath.lengthDirX(v_dir, v_len), (int)GameMath.lengthDirY(v_dir, v_len));
+			}
 		}
 
 		public int get_screen_x() { return (int)x - game.game_screen.get_x(); }
@@ -44,15 +55,13 @@ public class Effect_blood {
 		public void draw(Graphics g) {
 			if (alpha <= 0) return;
 
-			Polygon p = new Polygon();
+			Polygon new_p = new Polygon();
 
-			p.addPoint(get_screen_x() + (int)GameMath.lengthDirX(rotation, size), get_screen_y() + (int)GameMath.lengthDirY(rotation, size));
-			p.addPoint(get_screen_x() + (int)GameMath.lengthDirX(rotation+90, size), get_screen_y() + (int)GameMath.lengthDirY(rotation+90, size));
-			p.addPoint(get_screen_x() + (int)GameMath.lengthDirX(rotation+180, size), get_screen_y() + (int)GameMath.lengthDirY(rotation+180, size));
-			p.addPoint(get_screen_x() + (int)GameMath.lengthDirX(rotation-90, size), get_screen_y() + (int)GameMath.lengthDirY(rotation-90, size));
+			for(int i=0; i<p.npoints; i++)
+				new_p.addPoint(get_screen_x() + p.xpoints[i], get_screen_y() + p.ypoints[i]);
 
-			g.setColor(new Color(1f, 0f, 0f, alpha));
-			g.fillPolygon(p);
+			g.setColor(new Color(redness, 0f, 0f, alpha));
+			g.fillPolygon(new_p);
 		}
 	}
 
@@ -63,18 +72,19 @@ public class Effect_blood {
 		this.game = game;
 
 		for(int i=0; i<particle_list.length; i++) {
-			float particle_dir = dir + (float)Math.pow((float)GameMath.getRndDouble(-1f, 1f), 8f) * 20f,
+			float particle_dir = dir + (float)Math.pow((float)GameMath.getRndDouble(-1f, 1f), 5f) * 30f,
 					particle_force = (float)GameMath.getRndDouble(150f, 1250f),
 					particle_alpha = (float)GameMath.getRndDouble(0.4f, 1f),
+					particle_redness = (float)GameMath.getRndDouble(0.6f, 1f),
 					particle_size = (float)GameMath.getRndDouble(2f, 6f),
 					particle_rotation = (float)GameMath.getRndDouble(0f, 360f);
 
 			if (i > particle_list.length - 30) {
 				particle_dir = (float)GameMath.getRndDouble(0, 360);
-				particle_force = (float)GameMath.getRndDouble(200f, 300f);
+				particle_force = (float)GameMath.getRndDouble(100f, 300f);
 			}
 
-			particle_list[i] = new Particle(x, y, particle_dir, particle_force, particle_alpha, particle_size, particle_rotation);
+			particle_list[i] = new Particle(x, y, particle_dir, particle_force, particle_alpha, particle_redness, particle_size, particle_rotation);
 		}
 	}
 
