@@ -4,7 +4,6 @@ import com.emilstrom.input.InputEngine;
 import com.emilstrom.input.KeyboardInput;
 import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
-import com.ludumdare.game.effects.Effect_blood;
 import com.ludumdare.game.effects.Effect_dash;
 import com.ludumdare.game.helper.Animation;
 import com.ludumdare.game.helper.Art;
@@ -13,15 +12,12 @@ import gamemath.GameMath;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * Created by J on 19/07/2014.
  */
 
 public class Player extends Actor {
-	private static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40;
+	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40;
 
 	public enum states {GROUND, AIR, WALL};
 	public states state;
@@ -36,9 +32,7 @@ public class Player extends Actor {
 	//Dashing stuff
 	static final float dash_length = 1.2f, dash_accuracy = 50f; //IN SECONDS WHOO
 
-	float dash_list_x[] = new float[(int)(dash_accuracy * dash_length * 2)];
-	float dash_list_y[] = new float[(int)(dash_accuracy * dash_length * 2)];
-	int dash_list_i = 0;
+	Player_shadow player_shadow;
 
 	float dash_record_timer = 0f;
 	float dash_ability_value = 2f;
@@ -48,8 +42,7 @@ public class Player extends Actor {
 
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
-
-		clear_position_list();
+		player_shadow = new Player_shadow(this);
 	}
 
 	public void jump() {
@@ -68,7 +61,7 @@ public class Player extends Actor {
 	public void dash() {
 		if (dash_ability_value < 1f) return;
 
-		float dash_position[] = get_dash_position();
+		float dash_position[] = player_shadow.get_position();
 
 		float dash_x = dash_position[0],
 				dash_y = dash_position[1];
@@ -98,63 +91,12 @@ public class Player extends Actor {
 		x = dash_position[0];
 		y = dash_position[1];
 
-		dash_list_i = (dash_list_i + dash_list_x.length/2) % dash_list_x.length;
+		player_shadow.dash();
 
-		clear_position_list(dash_list_i, dash_list_x.length/2);
 		dash_ability_value -= 1f;
 	}
 
 	public void slide() {
-	}
-
-	public void clear_position_list() {
-		for(int i=0; i<dash_list_x.length; i++) {
-			dash_list_x[i] = x;
-			dash_list_y[i] = y;
-		}
-	}
-
-	public void clear_position_list(int index, int n) {
-		for(int i=0; i<n; i++) {
-			dash_list_x[(index + i) % dash_list_x.length] = x;
-			dash_list_y[(index + i) % dash_list_y.length] = y;
-		}
-	}
-
-	public void record_position(float x, float y) {
-		dash_list_x[dash_list_i] = x;
-		dash_list_y[dash_list_i] = y;
-		dash_list_i = (dash_list_i + 1) % dash_list_x.length;
-	}
-
-	public int get_dash_position_index() {
-		return (dash_list_i + dash_list_x.length / 2) % dash_list_x.length;
-	}
-
-	public float[] get_dash_position() {
-		int index = get_dash_position_index();
-		return get_dash_position(index);
-	}
-	public float[] get_dash_position(int index) {
-		float ret[] = new float[2];
-
-		ret[0] = dash_list_x[index];
-		ret[1] = dash_list_y[index];
-
-		return ret;
-	}
-
-	public float[] get_shadow_speed() {
-		int index = get_dash_position_index();
-		float pos1[] = get_dash_position(index);
-		float pos2[] = get_dash_position((int)GameMath.mod(index-1, dash_list_x.length));
-
-		return new float[]{(pos1[0] - pos2[0]) * dash_accuracy, (pos1[1] - pos2[1]) * dash_accuracy};
-	}
-
-	public boolean get_shadow_on_ground() {
-		float pos[] = get_dash_position();
-		return (pos[1] > 100 - 2);
 	}
 
 	public void logic(Environment environment) {
@@ -182,7 +124,7 @@ public class Player extends Actor {
 		//Record position LEL
 		dash_record_timer += Game.delta_time;
 		if (dash_record_timer >= 1 / dash_accuracy) {
-			record_position(x, y);
+			player_shadow.record_position(x, y);
 			dash_record_timer -= 1 / dash_accuracy;
 		}
 
@@ -197,18 +139,13 @@ public class Player extends Actor {
 		old_input = in;
 
 		super.logic(environment);
+
+		player_shadow.logic();
 	}
 
 	public void draw(Graphics g) {
 		//super.draw(g);
-
-		if (dash_ability_value > 1f) {
-			float shadow_position[] = get_dash_position();
-
-			g.setColor(Color.RED);
-			g.fillRect((int) shadow_position[0], (int) shadow_position[1], get_width(), get_height());
-		}
-
+		player_shadow.draw(g);
 
 		boolean flip_sprite = facing == face.LEFT;
 
