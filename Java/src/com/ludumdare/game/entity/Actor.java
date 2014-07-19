@@ -39,15 +39,20 @@ public class Actor extends Entity {
 		float x_new = x + xspeed * Game.delta_time;
 		float y_new = y + yspeed * Game.delta_time;
 
-		if (game.environment.collision(x_new, y, width, height)) { x = x_new; }
-		else {
-			x += minabs(game.environment.dist_x(x, x_new, y), game.environment.dist_x(x + width, x_new, y));
-			xspeed = 0;
-		}
-		if (game.environment.collision(x, y_new, width, height)) { y = y_new; }
-		else {
-			y += minabs(game.environment.dist_y(y, x, y_new), game.environment.dist_y(y + height, x, y_new));
-			yspeed = 0;
+		if (collision) {
+			if (game.environment.collision(x_new, y, width, height)) { x = x_new; }
+			else {
+				x += minabs(game.environment.dist_x(x, x_new, y), game.environment.dist_x(x + width, x_new, y));
+				xspeed = 0;
+			}
+			if (game.environment.collision(x, y_new, width, height)) { y = y_new; }
+			else {
+				y += minabs(game.environment.dist_y(y, x, y_new), game.environment.dist_y(y + height, x, y_new));
+				yspeed = 0;
+			}
+		} else {
+			x = x_new;
+			y = y_new;
 		}
 	}
 

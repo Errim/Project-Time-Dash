@@ -24,7 +24,7 @@ public class Game {
 	public GameScreen game_screen;
 
 	public Game() {
-		player = new Player(36, 0, 16, 16, true, Actor.face.RIGHT, this);
+		player = new Player(36, 36, 16, 16, true, Actor.face.RIGHT, this);
 		environment = new Environment(this);
 
 		game_screen = new GameScreen(this);

@@ -32,14 +32,12 @@ public class Environment {
 	public float dist_x(float x, float tile_x, float tile_y) {
 		int left = get_x(find_tile(tile_x, tile_y));
 		int right = left + tile_width;
-		if (Math.abs(x - left) < Math.abs(x - right)) { return x - left; }
-		else { return x - right; }
+		return (Math.abs(x - left) < Math.abs(x - right)) ? x - left : x - right;
 	}
 	public float dist_y(float y, float tile_x, float tile_y) {
 		int up = get_y(find_tile(tile_x, tile_y));
 		int down = up + tile_height;
-		if (Math.abs(y - up) < Math.abs(y - down)) { return y - up; }
-		else { return y - down; }
+		return (Math.abs(y - up) < Math.abs(y - down)) ? y - up : y - down;
 	}
 	public void draw(Graphics g) {
 		for (int i = 0 ; i < tiles.length ; i++) {
