@@ -13,7 +13,9 @@ public class Environment {
 	public int tiles[];
 
 	public boolean tile_clear(float x, float y) {
-		return (tiles[find_tile(x, y)] == 0);
+		int tile = find_tile(x, y);
+		if (tile < 0 || tile >= tiles.length) { return false; }
+		return (tiles[tile] == 0);
 	}
 	public int find_tile(float x, float y) {
 		return get_tile((int)(x / tile_width), (int)(y / tile_height));

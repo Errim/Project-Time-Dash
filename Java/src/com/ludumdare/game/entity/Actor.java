@@ -34,7 +34,7 @@ public class Actor extends Entity {
 
 		//Temp bounce
 		if (y + yspeed * Game.delta_time > 100) yspeed *= -0.1f;
-		if (x + xspeed * Game.delta_time < 0) xspeed *= -0.2f;
+		//if (x + xspeed * Game.delta_time < 0) xspeed *= -0.2f;
 
 		/*This collision detection might just work*/
 		float x_new = x + xspeed * Game.delta_time;
