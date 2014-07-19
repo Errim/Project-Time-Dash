@@ -10,13 +10,13 @@ import com.ludumdare.Dash_component;
 public class Environment {
 	private int num_wide = 30, num_high = 20,
 			tile_width = 32, tile_height = 32; /* 30x20 */
-	public int tiles[] = new int[num_wide * num_high];
+	public int tiles[];
 
 	public boolean tile_clear(int x, int y) {
 		return (tiles[find_tile(x, y)] == 0);
 	}
 	public int find_tile(float x, float y) {
-		return get_tile(x / tile_width, y / tile_height);
+		return get_tile((int)(x / tile_width), (int)(y / tile_height));
 	}
 	public int get_x(int tile) {
 		return get_xth(tile) * tile_width;
@@ -24,10 +24,26 @@ public class Environment {
 	public int get_y(int tile) {
 		return get_yth(tile) * tile_height;
 	}
+	public int dist_x(int x, int tile_x, int tile_y) {
+		int left = get_x(find_tile(tile_x, tile_y));
+		int right = left + tile_width;
+		if (Math.abs(x - left) < Math.abs(x - right)) { return x - left; }
+		else { return x - right; }
+	}
+	public int dist_y(int y, int tile_x, int tile_y) {
+		int up = get_y(find_tile(tile_x, tile_y));
+		int down = up + tile_height;
+		if (Math.abs(y - up) < Math.abs(y - down)) { return y - up; }
+		else { return y - down; }
+	}
 	public void draw(Graphics g) {
 		for (int i = 0 ; i < tiles.length ; i++) {
 			if (tiles[i] != 0) { draw_tile(g, i); }
 		}
+	}
+	public Environment() {
+		tiles = new int[num_wide * num_high];
+		for (int i = 0 ; i < tiles.length ; i++) { tiles[i] = 0; }
 	}
 	/* Private */
 	private int get_tile(int xth, int yth) {

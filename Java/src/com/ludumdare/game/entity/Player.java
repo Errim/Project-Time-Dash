@@ -2,6 +2,7 @@ package com.ludumdare.game.entity;
 
 import com.emilstrom.input.InputEngine;
 import com.emilstrom.input.KeyboardInput;
+import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
 
 import java.awt.*;
@@ -37,8 +38,8 @@ public class Player extends Actor {
 	public void slide() {
 	}
 
-	public void logic() {
-		super.logic();
+	public void logic(Environment environment) {
+		super.logic(environment);
 
 		KeyboardInput in = InputEngine.getKeyboardInput();
 

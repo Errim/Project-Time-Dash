@@ -1,5 +1,6 @@
 package com.ludumdare.game.entity;
 
+import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public class Actor extends Entity {
 	public boolean is_in_air() { return y < 100; }
 	public boolean is_on_ground() { return y > 100 - 2; }
 
-	public void logic() {
+	public void logic(Environment environment) {
 
 		if (!flying) {
 			yspeed += GRAVITY_FACTOR * Game.delta_time;
@@ -35,8 +36,13 @@ public class Actor extends Entity {
 		//Temp bounce
 		if (y + yspeed * Game.delta_time > 100) yspeed *= -0.4f;
 
-		x += xspeed * Game.delta_time;
-		y += yspeed * Game.delta_time;
+		/*This collision detection might just work*/
+		float x_new = x + xspeed * Game.delta_time;
+		float y_new = y + yspeed * Game.delta_time;
+		if (environment.tile_clear((int)x_new, (int)y)) { x = x_new; }
+		else { x += environment.dist_x((int)x, (int)x_new, (int)y); }
+		if (environment.tile_clear((int)x, (int)y_new)) { y = y_new; }
+		else { y += environment.dist_y((int)y, (int)x, (int)y_new); }
 	}
 
 	public void draw(Graphics g) {

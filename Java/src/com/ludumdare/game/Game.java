@@ -16,9 +16,11 @@ public class Game {
 
 	public Game() {
 		player = new Player(0, 0, 16, 16, true, Actor.face.RIGHT);
+		Environment environment = new Environment();
+		environment.tiles[0] = 1;
 	}
 	public void logic() {
-		player.logic();
+		player.logic(environment);
 	}
 	public void draw(Graphics g) {
 		player.draw(g);
