@@ -14,10 +14,10 @@ public class Entity {
 	public int get_height() { return (int)height; }
 	public int get_x() { return (int)x; }
 	public int get_y() { return (int)y; }
-	public int get_int_x() { return (int)getX(); }
-	public int get_int_y() { return (int)getY(); }
-	public int get_screen_x() { return getX(); }
-	public int get_screen_y() { return getY(); }
+	public int get_int_x() { return (int)get_x(); }
+	public int get_int_y() { return (int)get_y(); }
+	public int get_screen_x() { return get_x(); }
+	public int get_screen_y() { return get_y(); }
 
 	public Entity(float x, float y, float height, float width, boolean collision) {
 		this.x = x;
@@ -31,6 +31,6 @@ public class Entity {
 	}
 	public void draw(Graphics g) {
 		g.setColor(Color.BLUE);
-		g.fillRect(getScreenX(), getScreenY(), getWidth(), getHeight());
+		g.fillRect(get_screen_x(), get_screen_y(), get_width(), get_height());
 	}
 }
