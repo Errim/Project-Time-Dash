@@ -9,6 +9,6 @@ public class Environement {
 	public int tiles[] = new int[num_wide * num_high];
 
 	public int get_tile(int xth, int yth) {
-		return (num_high * x) + y;
+		return (num_high * xth) + yth;
 	}
 }

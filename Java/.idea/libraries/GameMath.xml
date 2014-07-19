@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="GameMath">
     <CLASSES>
-      <root url="jar://C:/Google Drive/Programmering/Java/!!Libs/!JARS/GameMath.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/GameMath.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

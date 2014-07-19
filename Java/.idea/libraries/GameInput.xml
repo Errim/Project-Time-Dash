@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="GameInput">
     <CLASSES>
-      <root url="jar://C:/Google Drive/Programmering/Java/!!Libs/!JARS/GameInput.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/GameInput.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
