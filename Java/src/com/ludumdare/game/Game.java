@@ -17,6 +17,9 @@ import java.awt.image.RescaleOp;
  * Created by Emil on 2014-07-19.
  */
 public class Game {
+	public static Font font_text = new Font("serif", Font.BOLD, 12),
+		font_big = new Font("serif", Font.BOLD, 15);
+
 	public static float delta_time, real_delta_time;
 	public Player player;
 
@@ -143,17 +146,21 @@ public class Game {
 					y = 20;
 
 			g.setColor(new Color(0, 109, 138, (int)(255 * tut_alpha)));
+			g.setFont(font_big);
 			g.drawString(message_1, x, y);
-			g.drawString(message_2, x, y + 15);
-			g.drawString(message_3, x, y + 30);
+			g.setFont(font_text);
+			g.drawString(message_2, x, y + 20);
+			g.drawString(message_3, x, y + 35);
 
 			x += 1;
 			y -= 1;
 
 			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 156) * tut_alpha)));
+			g.setFont(font_big);
 			g.drawString(message_1, x, y);
-			g.drawString(message_2, x, y+15);
-			g.drawString(message_3, x, y+30);
+			g.setFont(font_text);
+			g.drawString(message_2, x, y + 20);
+			g.drawString(message_3, x, y + 35);
 		}
 
 		if (logo_alpha > 0) {

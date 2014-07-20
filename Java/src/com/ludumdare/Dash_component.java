@@ -66,12 +66,22 @@ public class Dash_component extends Applet implements Runnable {
 
 			//Logic
 			if (this.hasFocus())
-			game.logic();
+				game.logic();
 
 			//Draw
 			bbg.setColor(new Color(0.5f, 0.5f, 0.5f));
 			bbg.fillRect(0, 0, GAME_W, GAME_H);
 			game.draw(bbg);
+
+			if (!this.hasFocus()) {
+				bbg.setColor(new Color(0f, 0f, 0f, 0.8f));
+				bbg.fillRect(0, 0, GAME_W, GAME_H);
+
+				float a = (float)(Math.sin(System.currentTimeMillis() * 0.01) + 1) / 2;
+
+				bbg.setColor(new Color(1f, 1f, 1f, a));
+				bbg.drawString("Click to focus!", GAME_W/2 - 50, GAME_H/2 + 5);
+			}
 			g.drawImage(back_buffer, 0, 0, GAME_W * GAME_S, GAME_H * GAME_S, 0, 0, GAME_W, GAME_H, null);
 
 			try{ Thread.sleep(2); } catch(Exception e) {}
