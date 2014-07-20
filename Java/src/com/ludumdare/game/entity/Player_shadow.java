@@ -107,7 +107,7 @@ public class Player_shadow {
 	public void draw(Graphics g) {
 		if (player.dash_ability_value < 1f) return;
 
-		boolean flip_sprite = look_dir == 1 ? false : true;
+		boolean flip_sprite = (look_dir != 1);
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 0.01f) {

@@ -9,6 +9,7 @@ import java.awt.*;
 /**
  * Created by Admin on 19/07/2014.
  */
+
 public class Enemy extends Actor {
 	public int health = 10;
 	public float float_speed = 70f;
