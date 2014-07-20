@@ -2,6 +2,7 @@ package com.ludumdare.game.entity;
 
 import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
+import com.ludumdare.game.helper.Timer;
 
 import java.awt.*;
 
@@ -15,6 +16,12 @@ public class Actor extends Entity {
 	public enum face {RIGHT, LEFT}
 	public face facing = face.RIGHT;
 	public boolean flying = false;
+	public int hp = 1;
+	public final int dmg = 1;
+
+	private final float invincibiliy_time = 0.5f;
+
+	private Timer hit_timer;
 
 	//Physics
 	float xspeed=0f, yspeed=0f;
@@ -22,8 +29,10 @@ public class Actor extends Entity {
 	public Actor(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, game);
 		this.facing = facing;
+		hit_timer = new Timer(invincibiliy_time, true);
 	}
 
+	public boolean is_alive() { return hp > 0; }
 	public boolean is_in_air() { return game.environment.collision(x, y, width, height); }
 	public boolean is_on_ground() { return !game.environment.collision(x, y + 2, width, height); }
 
@@ -31,7 +40,17 @@ public class Actor extends Entity {
 		return Math.abs(a) <= Math.abs(b) ? a : b;
 	}
 
+	public void take_hit(int dmg) {
+		if (hit_timer.isDone()) {
+			hit_timer.reset();
+			hp -= dmg;
+		}
+	}
+
+	public void take_hit() { take_hit(1); }
+
 	public void logic() {
+		hit_timer.logic();
 		if (!flying) {
 			yspeed += GRAVITY_FACTOR * Game.delta_time;
 		}

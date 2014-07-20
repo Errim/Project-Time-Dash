@@ -13,7 +13,7 @@ import java.awt.*;
  */
 
 public class Enemy extends Actor {
-	public int health = 10;
+	public int dmg = 1;
 	public float float_speed = 70f;
 
 	Effect_blood effect_blood;
@@ -23,12 +23,17 @@ public class Enemy extends Actor {
 	public Enemy(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
 		flying = true;
+		hp = 1;
 	}
 
-	public boolean is_alive() { return health > 0; }
+	public void take_hit(int dmg, float dir) {
+		super.take_hit(dmg);
+		if (!is_alive()) {
+			kill(dir);
+		}
+	}
 
-	public void kill(float dir) {
-		health = 0;
+	private void kill(float dir) {
 		effect_blood = new Effect_blood(get_center_x(), get_center_y(), dir, game);
 	}
 
@@ -50,6 +55,8 @@ public class Enemy extends Actor {
 		double dir = GameMath.getDirection(x, y, player_x, player_y);
 		x += GameMath.lengthDirX((float)dir, float_speed * Game.delta_time);
 		y += GameMath.lengthDirY((float)dir, float_speed * Game.delta_time);
+
+		if (game.player.collides_with(this)) { game.player.take_hit(); }
 	}
 
 	public void draw(Graphics g) {

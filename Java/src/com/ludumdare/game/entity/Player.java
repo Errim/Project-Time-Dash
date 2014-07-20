@@ -43,6 +43,14 @@ public class Player extends Actor {
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
 		player_shadow = new Player_shadow(this);
+		hp = 2;
+	}
+
+	public void take_hit(int dmg) {
+		super.take_hit(dmg);
+		if (!is_alive()) {
+			game.start_new_game();
+		}
 	}
 
 	public void jump() {
@@ -74,7 +82,7 @@ public class Player extends Actor {
 
 		effect_dash = new Effect_dash(get_center_x(), get_center_y(), dash_x + width/2, dash_y + height/2, game);
 
-		//KILL STUFF YEYEYEEYYE AHDUIAWHDHWID FEELS GOOD AROUND MY DICK
+		//KILL STUFF YEYEYEEYYE AHDUIAWHDHWID FEELS GOOD AROUND MY DICK - wau
 		final int precision = (int)(len / 5);
 		float check_x = x, check_y = y;
 
@@ -83,7 +91,7 @@ public class Player extends Actor {
 			check_y += (float)GameMath.lengthDirY(dir, len/precision);
 
 			for(Enemy e : game.enemy_list) {
-				if (e != null && e.is_alive() && e.collides_with(check_x, check_y, get_width(), get_height())) e.kill(dir);
+				if (e != null && e.is_alive() && e.collides_with(check_x, check_y, get_width(), get_height())) e.take_hit(dmg, dir);
 			}
 		}
 
