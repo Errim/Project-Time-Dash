@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class Player extends Actor {
 	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
-		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200, hit_force = 340, slide_interval = 0.2f, slide_force = 300;
+		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200, hit_force = 340, slide_interval = 0.25f, slide_force = 300;
 	public int player_score = 0;
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
 		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f),
@@ -42,6 +42,7 @@ public class Player extends Actor {
 	float thump_value = 0;
 
 	float slide_timer = 0;
+	float gravity_immunity = 0f;
 
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -82,6 +83,8 @@ public class Player extends Actor {
 			game.add_effect(new Effect_dust(get_center_x() + get_width()/2 * wall_jump, get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 1f, 30, 0.8f, game));
 
 			wall_sticky = 0;
+
+			jump_points = 1;
 		} else {
 			if (jump_points <= 0) return;
 
@@ -150,8 +153,18 @@ public class Player extends Actor {
 	}
 
 	public void slide(int dir) {
-		xspeed = slide_force * dir;
-		game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 2f, 30, 0.95f, game));
+		if (!is_on_ground()) {
+			if (jump_points <= 0) return;
+
+			xspeed = slide_force * dir * 0.8f;
+			yspeed = 0;
+			game.add_effect(new Effect_dust(get_center_x(), get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 3f, 30, 1f, game));
+			gravity_immunity = 0.2f;
+			jump_points--;
+		} else {
+			xspeed = slide_force * dir;
+			game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float) GameMath.getDirection(0, 0, xspeed, yspeed), 2f, 30, 0.95f, game));
+		}
 	}
 
 	public int can_wall_jump() {
@@ -196,29 +209,29 @@ public class Player extends Actor {
 			if (yspeed < 0) yspeed = Math.min(0, yspeed + v_f * Game.delta_time);
 		}
 
-		if (in.isKeyDown(KeyEvent.VK_RIGHT) && xspeed < max_speed) {
+		if (in.isKeyDown(KeyEvent.VK_RIGHT)) {
 			if (wall_jump == 1) wall_sticky = 1;
 
 			if (wall_sticky < 0) {
 				wall_sticky += 7f * Game.delta_time;
 				if (wall_sticky >= 0) wall_sticky = 0;
-			} else xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
+			} else if (xspeed < max_speed) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
 
-			if (is_on_ground() && !old_input.isKeyDown(KeyEvent.VK_RIGHT)) {
+			if (!old_input.isKeyDown(KeyEvent.VK_RIGHT)) {
 				if (slide_timer < slide_interval)
 					slide(1);
 				else slide_timer = 0f;
 			}
 		}
-		if (in.isKeyDown(KeyEvent.VK_LEFT) && xspeed > -max_speed) {
+		if (in.isKeyDown(KeyEvent.VK_LEFT)) {
 			if (wall_jump == -1) wall_sticky = -1;
 
 			if (wall_sticky > 0) {
 				wall_sticky -= 7f * Game.delta_time;
 				if (wall_sticky <= 0) wall_sticky = 0;
-			} else xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+			} else if (xspeed > -max_speed) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
 
-			if (is_on_ground() && !old_input.isKeyDown(KeyEvent.VK_LEFT)) {
+			if (!old_input.isKeyDown(KeyEvent.VK_LEFT)) {
 				if (slide_timer < slide_interval)
 					slide(-1);
 				else slide_timer = 0f;
@@ -229,6 +242,8 @@ public class Player extends Actor {
 		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
 
 		slide_timer += Game.delta_time;
+		gravity_immunity -= Game.delta_time;
+		flying = gravity_immunity > 0;
 
 		//Record position LEL
 		dash_record_timer += Game.delta_time;
@@ -266,6 +281,7 @@ public class Player extends Actor {
 
 		boolean flip_sprite = facing == face.LEFT;
 
+		g.setColor(Color.BLACK);
 		g.drawString(Integer.toString(player_score), get_screen_x(), get_screen_y());
 
 		if (is_on_ground()) {
@@ -290,6 +306,8 @@ public class Player extends Actor {
 			int wall_jump = can_wall_jump();
 			if (wall_jump != 0 && wall_sticky != 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump != 1, g);
+			else if (Math.abs(xspeed) > max_speed && Math.abs(yspeed) < 100f)
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 3, 2, flip_sprite, g);
 			else if (yspeed > 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), yspeed > thump_threshold ? 2 : 1, 2, flip_sprite, g);
 			else
