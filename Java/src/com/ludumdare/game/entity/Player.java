@@ -11,6 +11,7 @@ import gamemath.GameMath;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 /**
  * Created by J on 19/07/2014.
@@ -18,7 +19,7 @@ import java.awt.event.KeyEvent;
 
 public class Player extends Actor {
 	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
-		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200, hit_force = 340;
+		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200, hit_force = 340, slide_interval = 0.2f, slide_force = 300;
 	public int player_score = 0;
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
 		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f),
@@ -39,6 +40,8 @@ public class Player extends Actor {
 	float wall_sticky = 0;
 	int prev_wall_jump = 0;
 	float thump_value = 0;
+
+	float slide_timer = 0;
 
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -76,7 +79,7 @@ public class Player extends Actor {
 			xspeed = -wall_jump_force_x * wall_jump;
 			yspeed = -wall_jump_force_y;
 
-			game.add_effect(new Effect_dust(get_center_x() + get_width()/2 * wall_jump, get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 30, 0.8f, game));
+			game.add_effect(new Effect_dust(get_center_x() + get_width()/2 * wall_jump, get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 1f, 30, 0.8f, game));
 
 			wall_sticky = 0;
 		} else {
@@ -85,9 +88,9 @@ public class Player extends Actor {
 			yspeed = -jump_force;
 			if (!is_on_ground()) {
 				jump_points--;
-				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 20, 0.9f, game));
+				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 1f, 20, 0.9f, game));
 			} else {
-				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 10, 0.2f, game));
+				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 1f, 10, 0.2f, game));
 			}
 		}
 	}
@@ -118,12 +121,19 @@ public class Player extends Actor {
 		final int precision = (int)(len / 5);
 		float check_x = x, check_y = y;
 
+		java.util.List<Enemy> enemy_hit_list = new ArrayList<Enemy>();
+
 		for(int i=0; i<precision; i++) {
 			check_x += (float)GameMath.lengthDirX(dir, len/precision);
 			check_y += (float)GameMath.lengthDirY(dir, len/precision);
 
 			for(Enemy e : game.enemy_list) {
-				if (e != null && e.is_alive() && e.collides_with(check_x, check_y, get_width(), get_height())) e.take_hit(dmg, dir);
+				if (e == null || !e.is_alive() || enemy_hit_list.contains(e)) continue;
+
+				if (e.collides_with(check_x, check_y, get_width(), get_height())) {
+					e.take_hit(dmg, dir);
+					enemy_hit_list.add(e);
+				}
 			}
 		}
 
@@ -137,6 +147,11 @@ public class Player extends Actor {
 
 		dash_ability_value -= 1f;
 		jump_points = 1;
+	}
+
+	public void slide(int dir) {
+		xspeed = slide_force * dir;
+		game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 2f, 30, 0.95f, game));
 	}
 
 	public int can_wall_jump() {
@@ -188,6 +203,12 @@ public class Player extends Actor {
 				wall_sticky += 7f * Game.delta_time;
 				if (wall_sticky >= 0) wall_sticky = 0;
 			} else xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
+
+			if (is_on_ground() && !old_input.isKeyDown(KeyEvent.VK_RIGHT)) {
+				if (slide_timer < slide_interval)
+					slide(1);
+				else slide_timer = 0f;
+			}
 		}
 		if (in.isKeyDown(KeyEvent.VK_LEFT) && xspeed > -max_speed) {
 			if (wall_jump == -1) wall_sticky = -1;
@@ -196,10 +217,18 @@ public class Player extends Actor {
 				wall_sticky -= 7f * Game.delta_time;
 				if (wall_sticky <= 0) wall_sticky = 0;
 			} else xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+
+			if (is_on_ground() && !old_input.isKeyDown(KeyEvent.VK_LEFT)) {
+				if (slide_timer < slide_interval)
+					slide(-1);
+				else slide_timer = 0f;
+			}
 		}
 		if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
 		if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) jump();
 		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
+
+		slide_timer += Game.delta_time;
 
 		//Record position LEL
 		dash_record_timer += Game.delta_time;

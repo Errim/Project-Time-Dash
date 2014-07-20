@@ -14,8 +14,8 @@ public class Effect_thump extends Effect {
 	public Effect_thump(float x, float y, float intensity, Game game) {
 		super(game);
 
-		dust[0] = new Effect_dust(x, y, -90 - 75, (int)(15 * intensity), 0.8f, game);
-		dust[1] = new Effect_dust(x, y, -90 + 75, (int)(15 * intensity), 0.8f, game);
+		dust[0] = new Effect_dust(x, y, -90 - 75, 1 + intensity * 0.2f, (int)(15 * intensity), 0.8f, game);
+		dust[1] = new Effect_dust(x, y, -90 + 75, 1 + intensity * 0.2f, (int)(15 * intensity), 0.8f, game);
 		effect_ring = new Effect_ring(x, y, 20f * intensity, 0.3f * intensity, game);
 	}
 

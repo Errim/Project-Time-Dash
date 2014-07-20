@@ -67,14 +67,14 @@ public class Effect_dust extends Effect {
 
 	Particle particle_list[];
 
-	public Effect_dust(float x, float y, float dir, int n, float perc, Game game) {
+	public Effect_dust(float x, float y, float dir, float force, int n, float perc, Game game) {
 		super(game);
 
 		particle_list = new Particle[n];
 
 		for(int i=0; i<particle_list.length; i++) {
 			float particle_dir = dir + (float)Math.pow((float)GameMath.getRndDouble(-1f, 1f), 5f) * 40f,
-					particle_force = (float)GameMath.getRndDouble(20f, 150f),
+					particle_force = (float)GameMath.getRndDouble(20f, 150f) * force,
 					particle_alpha = (float)GameMath.getRndDouble(0.4f, 1f),
 					particle_whiteness = (float)GameMath.getRndDouble(0.6f, 0.8f),
 					particle_size = (float)GameMath.getRndDouble(1f, 3f),
@@ -82,7 +82,7 @@ public class Effect_dust extends Effect {
 
 			if (i > particle_list.length * perc) {
 				particle_dir = (float)GameMath.getRndDouble(0, 360);
-				particle_force = (float)GameMath.getRndDouble(0f, 90f);
+				particle_force = (float)GameMath.getRndDouble(0f, 90f) * force;
 			}
 
 			particle_list[i] = new Particle(x, y, particle_dir, particle_force, particle_alpha, particle_whiteness, particle_size, particle_rotation);

@@ -26,6 +26,12 @@ public class Enemy extends Actor {
 
 	public void take_hit(int dmg, float dir) {
 		super.take_hit(dmg);
+
+		dir += (float)GameMath.getRndDouble(-45f, 45f);
+
+		game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
+		game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
+
 		if (!is_alive()) {
 			kill(dir);
 		}
@@ -34,11 +40,6 @@ public class Enemy extends Actor {
 	private void kill(float dir) {
 		super.kill();
 		game.player.increase_score(score);
-
-		dir += (float)GameMath.getRndDouble(-45f, 45f);
-
-		game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
-		game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
 	}
 
 	public void logic() {

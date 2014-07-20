@@ -23,7 +23,7 @@ public class Game {
 	public Environment environment;
 	public GameScreen game_screen;
 
-	private Effect effect_list[] = new Effect[20];
+	private Effect effect_list[] = new Effect[100];
 	private int effect_i = 0;
 
 	public Game() {

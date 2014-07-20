@@ -45,9 +45,6 @@ public class Flyer extends Enemy {
 	public void draw(Graphics g) {
 		if (!is_alive()) return;
 
-		//g.setColor(game.player.collides_with(this) ? Color.RED : Color.CYAN);
-		//g.fillRect(get_screen_x(), get_screen_y(), get_width(), get_height());
-
 		animation.draw(get_screen_x(), get_screen_y(), facing == face.RIGHT ? false : true, g);
 	}
 }
