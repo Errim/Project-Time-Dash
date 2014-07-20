@@ -1,8 +1,6 @@
 package com.ludumdare.game;
 
-import com.ludumdare.game.entity.Actor;
-import com.ludumdare.game.entity.Enemy;
-import com.ludumdare.game.entity.Player;
+import com.ludumdare.game.entity.*;
 import com.ludumdare.game.entity.Enemy;
 import com.ludumdare.game.helper.GameScreen;
 import com.ludumdare.game.helper.Timer;
@@ -37,7 +35,12 @@ public class Game {
 	}
 
 	public void spawn_enemy() {
-		enemy_list[enemy_index] = new Enemy(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 12, false, Actor.face.LEFT, this);
+		int enemy_type =  GameMath.getRndInt(0, 1);
+		if (enemy_type == 0) {
+			enemy_list[enemy_index] = new Flyer(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 12, Actor.face.LEFT, this);
+		} else if (enemy_type == 1) {
+			enemy_list[enemy_index] = new Crawler(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 12, Actor.face.LEFT, this);
+		}
 		enemy_index = (enemy_index + 1) % enemy_list.length;
 	}
 
