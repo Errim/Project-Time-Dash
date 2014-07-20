@@ -72,18 +72,10 @@ public class Player extends Actor {
 
 			game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
 			game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
-		}
-		if (!is_alive()) {
-			kill();
+
+			Sound.death.play();
 		}
 	}
-
-	public void kill() {
-		super.kill();
-		Sound.death.play();
-		//game.start_new_game();
-	}
-
 	public void increase_score(int score) {
 		player_score += score;
 		score_alpha = 1f;
