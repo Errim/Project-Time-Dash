@@ -12,9 +12,11 @@ import gamemath.GameMath;
  */
 public class Bouncer extends Enemy {
 	private static final float big_jump = 300f, small_jump = 120f,
-			small_time = 0.2f, big_time = 5.5f;
+			small_time = 0.2f, big_time = 3.5f;
 	private int jump = 0; /* 0-1 small ; 2 big */
 	private Timer jump_timer;
+	private boolean was_on_ground = false;
+
 
 	public Bouncer(float x, float y, float height, float width, face facing, Game game) {
 		super(x, y, height, width, true, facing, game);
@@ -30,21 +32,19 @@ public class Bouncer extends Enemy {
 
 	public void logic() {
 		if (!is_alive()) return;
-
-		if (is_on_ground() && yspeed >= 0 && jump_timer.isDone()) {
-			if (jump < 2) {
-				jump(small_jump);
-				jump++;
-			} else {
-				jump(big_jump);
-				jump = 0;
+		if (is_on_ground()) {
+			jump_timer.logic(Game.delta_time);
+			if (!was_on_ground) { jump_timer.reset(); System.out.println("resett");}
+			else if (jump_timer.isDone()) {
+				if (jump < 2) {
+					jump(small_jump);
+					jump++;
+				} else {
+					jump(big_jump);
+					jump = 0;
+				}
 			}
-		}
-
-		jump_timer.logic();
-
-		if (game.environment.collision(x, y + yspeed * 5 * Game.delta_time, get_width(), get_height()) && yspeed > 0 && is_in_air()) {
-			jump_timer.reset();
+			was_on_ground = true;
 		}
 
 		super.logic();
