@@ -30,9 +30,7 @@ public class Timer {
 	public void logic() {
 		if (isDone()) return;
 
-		float d = real ? Game.real_delta_time : Game.delta_time;
-
-		timer += d;
+		timer += real ? Game.real_delta_time : Game.delta_time;;
 	}
 
 	public void logic(float factor) {

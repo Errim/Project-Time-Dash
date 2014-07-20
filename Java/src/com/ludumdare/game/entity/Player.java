@@ -7,6 +7,7 @@ import com.ludumdare.game.Game;
 import com.ludumdare.game.effects.*;
 import com.ludumdare.game.helper.Animation;
 import com.ludumdare.game.helper.Art;
+import com.ludumdare.game.helper.Timer;
 import gamemath.GameMath;
 
 import java.awt.*;
@@ -46,6 +47,11 @@ public class Player extends Actor {
 
 	float slide_timer = 0;
 	float gravity_immunity = 0f;
+
+	//Dying
+	Player_die_blood die_blood_list[] = new Player_die_blood[20];
+	int die_blood_list_i = 0;
+	Timer die_blood_timer = new Timer(0.05f, false);
 
 	public Player(float x, float y, float width, float height, boolean collision, face facing, Game game) {
 		super(x, y, width, height, collision, facing, game);
@@ -182,6 +188,15 @@ public class Player extends Actor {
 		animation_run.logic(Math.abs(xspeed) / max_speed);
 		animation_idle.logic(1f);
 
+		if (!is_alive()) {
+			die_blood_timer.logic();
+			if (die_blood_timer.isDone()) {
+				die_blood_list[die_blood_list_i] = new Player_die_blood(get_center_x(), get_center_y(), game);
+				die_blood_list_i = (die_blood_list_i + 1) % die_blood_list.length;
+				die_blood_timer.reset();
+			}
+		}
+
 		KeyboardInput in = InputEngine.getKeyboardInput();
 		if (old_input == null) old_input = in;
 
@@ -212,37 +227,41 @@ public class Player extends Actor {
 			if (yspeed < 0) yspeed = Math.min(0, yspeed + v_f * Game.delta_time);
 		}
 
-		if (in.isKeyDown(KeyEvent.VK_RIGHT)) {
-			if (wall_jump == 1) wall_sticky = 1;
+		if (is_alive()) {
+			if (in.isKeyDown(KeyEvent.VK_RIGHT)) {
+				if (wall_jump == 1) wall_sticky = 1;
 
-			if (wall_sticky < 0) {
-				wall_sticky += 7f * Game.delta_time;
-				if (wall_sticky >= 0) wall_sticky = 0;
-			} else if (xspeed < max_speed) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
+				if (wall_sticky < 0) {
+					wall_sticky += 7f * Game.delta_time;
+					if (wall_sticky >= 0) wall_sticky = 0;
+				} else if (xspeed < max_speed)
+					xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
 
-			if (!old_input.isKeyDown(KeyEvent.VK_RIGHT)) {
-				if (slide_timer < slide_interval)
-					slide(1);
-				else slide_timer = 0f;
+				if (!old_input.isKeyDown(KeyEvent.VK_RIGHT)) {
+					if (slide_timer < slide_interval)
+						slide(1);
+					else slide_timer = 0f;
+				}
 			}
-		}
-		if (in.isKeyDown(KeyEvent.VK_LEFT)) {
-			if (wall_jump == -1) wall_sticky = -1;
+			if (in.isKeyDown(KeyEvent.VK_LEFT)) {
+				if (wall_jump == -1) wall_sticky = -1;
 
-			if (wall_sticky > 0) {
-				wall_sticky -= 7f * Game.delta_time;
-				if (wall_sticky <= 0) wall_sticky = 0;
-			} else if (xspeed > -max_speed) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+				if (wall_sticky > 0) {
+					wall_sticky -= 7f * Game.delta_time;
+					if (wall_sticky <= 0) wall_sticky = 0;
+				} else if (xspeed > -max_speed)
+					xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
 
-			if (!old_input.isKeyDown(KeyEvent.VK_LEFT)) {
-				if (slide_timer < slide_interval)
-					slide(-1);
-				else slide_timer = 0f;
+				if (!old_input.isKeyDown(KeyEvent.VK_LEFT)) {
+					if (slide_timer < slide_interval)
+						slide(-1);
+					else slide_timer = 0f;
+				}
 			}
+			if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
+			if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) jump();
+			if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
 		}
-		if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
-		if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) jump();
-		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
 
 		slide_timer += Game.delta_time;
 		gravity_immunity -= Game.delta_time;
@@ -279,10 +298,19 @@ public class Player extends Actor {
 	}
 
 	public void draw(Graphics g) {
-		//super.draw(g);
-		player_shadow.draw(g);
-
 		boolean flip_sprite = facing == face.LEFT;
+
+		if (!is_alive()) {
+			if (is_on_ground()) Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 2, 6, flip_sprite, g);
+			else if (yspeed < 0) Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 6, flip_sprite, g);
+			else Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 6, flip_sprite, g);
+
+			for(Player_die_blood b : die_blood_list) if (b != null) b.draw(g);
+
+			return;
+		}
+
+		player_shadow.draw(g);
 
 		g.setColor(Color.BLACK);
 		g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 25, get_screen_y());
