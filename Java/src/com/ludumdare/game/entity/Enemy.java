@@ -14,6 +14,7 @@ import java.awt.*;
 
 public class Enemy extends Actor {
 	public int dmg = 1;
+	public int score = 1;
 	public float float_speed = 70f;
 
 	Effect_blood effect_blood;
@@ -35,6 +36,8 @@ public class Enemy extends Actor {
 	}
 
 	private void kill(float dir) {
+		super.kill();
+		game.player.increase_score(score);
 		effect_blood = new Effect_blood(get_center_x(), get_center_y(), dir, game);
 	}
 
@@ -60,7 +63,7 @@ public class Enemy extends Actor {
 		x += GameMath.lengthDirX((float)dir, float_speed * Game.delta_time);
 		y += GameMath.lengthDirY((float)dir, float_speed * Game.delta_time);
 
-		if (game.player.collides_with(this)) { game.player.take_hit(); }
+		if (game.player.collides_with(this)) { game.player.take_hit(dmg); }
 	}
 
 	public void draw(Graphics g) {

@@ -49,6 +49,8 @@ public class Actor extends Entity {
 
 	public void take_hit() { take_hit(1); }
 
+	public void kill() {}
+
 	public void logic() {
 		hit_timer.logic();
 		if (!flying) {

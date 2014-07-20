@@ -19,7 +19,7 @@ import java.awt.event.KeyEvent;
 public class Player extends Actor {
 	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
 		wall_jump_force_x = 160, wall_jump_force_y = 200;
-
+	public int player_score = 0;
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
 		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f);
 
@@ -47,8 +47,17 @@ public class Player extends Actor {
 	public void take_hit(int dmg) {
 		super.take_hit(dmg);
 		if (!is_alive()) {
-			game.start_new_game();
+			kill();
 		}
+	}
+
+	public void kill() {
+		super.kill();
+		game.start_new_game();
+	}
+
+	public void increase_score(int score) {
+		player_score += score;
 	}
 
 	public void jump() {
@@ -181,6 +190,8 @@ public class Player extends Actor {
 		player_shadow.draw(g);
 
 		boolean flip_sprite = facing == face.LEFT;
+
+		g.drawString(Integer.toString(player_score), get_screen_x(), get_screen_y());
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 20f) {
