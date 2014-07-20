@@ -23,7 +23,7 @@ public class Player extends Actor {
 	public states state;
 
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
-		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 1.2f);
+		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f);
 
 	Effect_dash effect_dash;
 

@@ -2,6 +2,8 @@ package com.ludumdare.game.entity;
 
 import com.ludumdare.game.Game;
 import com.ludumdare.game.effects.Effect_blood;
+import com.ludumdare.game.helper.Animation;
+import com.ludumdare.game.helper.Art;
 import gamemath.GameMath;
 
 import java.awt.*;
@@ -15,6 +17,8 @@ public class Enemy extends Actor {
 	public float float_speed = 70f;
 
 	Effect_blood effect_blood;
+
+	Animation animation = new Animation(Art.batSet, 0, 0, 6, 0.1f);
 
 	public Enemy(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -33,6 +37,8 @@ public class Enemy extends Actor {
 
 		if (!is_alive()) return;
 
+		animation.logic(1f);
+
 		super.logic();
 
 		float player_x = game.player.get_x(),
@@ -48,7 +54,9 @@ public class Enemy extends Actor {
 
 		if (!is_alive()) return;
 
-		g.setColor(game.player.collides_with(this) ? Color.RED : Color.CYAN);
-		g.fillRect(get_screen_x(), get_screen_y(), get_width(), get_height());
+		//g.setColor(game.player.collides_with(this) ? Color.RED : Color.CYAN);
+		//g.fillRect(get_screen_x(), get_screen_y(), get_width(), get_height());
+
+		animation.draw(get_screen_x(), get_screen_y(), g);
 	}
 }

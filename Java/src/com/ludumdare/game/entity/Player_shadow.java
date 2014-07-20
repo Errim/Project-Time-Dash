@@ -14,7 +14,7 @@ public class Player_shadow {
 	Player player;
 
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
-			animation_idle = new Animation(Art.characterSet, 0, 1, 2, 1.2f);
+			animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f);
 
 	float xspeed, yspeed;
 	int look_dir = 1;

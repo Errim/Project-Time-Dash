@@ -12,7 +12,7 @@ import java.awt.*;
 public class Effect_dash {
 	Game game;
 	float x, y, target_x, target_y, dir, len;
-	Timer effect_timer = new Timer(0.5f, false);
+	Timer effect_timer = new Timer(0.8f, false);
 
 	public Effect_dash(float x, float y, float target_x, float target_y, Game game) {
 		this.game = game;

@@ -10,7 +10,7 @@ import com.ludumdare.game.helper.Art;
 public class Environment {
 	Game game;
 
-	private int num_wide = 30, num_high = 20,
+	public int num_wide = 30, num_high = 20,
 			tile_width = 32, tile_height = 32;
 	public int tiles[];
 
