@@ -35,8 +35,10 @@ public class Player extends Actor {
 	float dash_record_timer = 0f;
 	float dash_ability_value = 0f;
 
-	//Double jumping
+	//Jumping around
 	int jump_points = 1;
+	float wall_sticky = 0;
+	int prev_wall_jump = 0;
 
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -65,6 +67,8 @@ public class Player extends Actor {
 		if (wall_jump != 0) {
 			xspeed = -wall_jump_force_x * wall_jump;
 			yspeed = -wall_jump_force_y;
+
+			wall_sticky = 0;
 		} else {
 			if (jump_points <= 0) return;
 
@@ -145,7 +149,17 @@ public class Player extends Actor {
 		float f = is_on_ground() ? friction : friction_air;
 		if (Math.abs(xspeed) > max_speed && is_on_ground()) f *= 0.6f;
 
-		float v_f = can_wall_jump() != 0 ? vertical_friction : 0;
+		int wall_jump = can_wall_jump();
+
+		if (wall_jump != prev_wall_jump) {
+			wall_sticky = wall_jump;
+		}
+		float v_f = wall_jump != 0 ? vertical_friction : 0;
+
+		if (wall_sticky > 0) wall_sticky = Math.max(0, wall_sticky - Game.delta_time);
+		if (wall_sticky < 0) wall_sticky = Math.min(0, wall_sticky + Game.delta_time);
+
+		prev_wall_jump = wall_jump;
 
 		if (!is_in_air() || !in.isKeyDown(KeyEvent.VK_RIGHT))
 			if (xspeed > 0) xspeed = Math.max(0, xspeed - f * Game.delta_time);
@@ -157,8 +171,22 @@ public class Player extends Actor {
 			if (yspeed < 0) yspeed = Math.min(0, yspeed + v_f * Game.delta_time);
 		}
 
-		if (in.isKeyDown(KeyEvent.VK_RIGHT) && xspeed < max_speed) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
-		if (in.isKeyDown(KeyEvent.VK_LEFT) && xspeed > -max_speed) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+		if (in.isKeyDown(KeyEvent.VK_RIGHT) && xspeed < max_speed) {
+			if (wall_jump == 1) wall_sticky = 1;
+
+			if (wall_sticky < 0) {
+				wall_sticky += 7f * Game.delta_time;
+				if (wall_sticky >= 0) wall_sticky = 0;
+			} else xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
+		}
+		if (in.isKeyDown(KeyEvent.VK_LEFT) && xspeed > -max_speed) {
+			if (wall_jump == -1) wall_sticky = -1;
+
+			if (wall_sticky > 0) {
+				wall_sticky -= 7f * Game.delta_time;
+				if (wall_sticky <= 0) wall_sticky = 0;
+			} else xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+		}
 		if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
 		if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) jump();
 		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
@@ -204,7 +232,7 @@ public class Player extends Actor {
 				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
 		} else {
 			int wall_jump = can_wall_jump();
-			if (wall_jump != 0)
+			if (wall_jump != 0 && wall_sticky != 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump == 1 ? false : true, g);
 			else if (yspeed > 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, g);

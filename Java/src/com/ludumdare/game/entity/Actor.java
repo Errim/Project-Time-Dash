@@ -33,7 +33,7 @@ public class Actor extends Entity {
 	}
 
 	public boolean is_alive() { return hp > 0; }
-	public boolean is_in_air() { return !game.environment.collision(x, y, width, height); }
+	public boolean is_in_air() { return !is_on_ground(); }
 	public boolean is_on_ground() { return game.environment.collision(x, y + 2, width, height); }
 
 	public float minabs(float a, float b) {
