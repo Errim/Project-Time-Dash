@@ -7,6 +7,7 @@ import com.ludumdare.game.Game;
 import com.ludumdare.game.effects.*;
 import com.ludumdare.game.helper.Animation;
 import com.ludumdare.game.helper.Art;
+import com.ludumdare.game.helper.Sound;
 import com.ludumdare.game.helper.Timer;
 import gamemath.GameMath;
 
@@ -105,6 +106,8 @@ public class Player extends Actor {
 				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 1f, 10, 0.2f, game));
 			}
 		}
+
+		Sound.jump.play();
 	}
 
 	public void jump_hold() {
@@ -159,6 +162,8 @@ public class Player extends Actor {
 
 		dash_ability_value -= 1f;
 		jump_points = 1;
+
+		Sound.dash.play();
 	}
 
 	public void slide(int dir) {
