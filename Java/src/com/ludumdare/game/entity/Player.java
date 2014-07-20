@@ -137,6 +137,8 @@ public class Player extends Actor {
 		final int precision = (int)(len / 5);
 		float check_x = x, check_y = y;
 
+		int kills = 0;
+
 		java.util.List<Enemy> enemy_hit_list = new ArrayList<Enemy>();
 
 		for(int i=0; i<precision; i++) {
@@ -149,9 +151,12 @@ public class Player extends Actor {
 				if (e.collides_with(check_x, check_y, get_width(), get_height())) {
 					e.take_hit(dmg, dir);
 					enemy_hit_list.add(e);
+					kills++;
 				}
 			}
 		}
+
+		if (kills > 0) Sound.death.play();
 
 		xspeed = (float)GameMath.lengthDirX(dir, 200f + 75f * (len / 100f));
 		yspeed = (float)GameMath.lengthDirY(dir, 200f + 75f * (len / 100f));
@@ -293,9 +298,13 @@ public class Player extends Actor {
 		//Thump to the ground!
 		thump_value -= Game.delta_time / 0.4f;
 
-		if (game.environment.collision(x, y + yspeed * Game.delta_time, get_width(), get_height()) && get_speed() > thump_threshold && yspeed > 0) {
-			game.add_effect(new Effect_thump(get_center_x() + xspeed * Game.delta_time, get_y() + yspeed * Game.delta_time + get_height(), yspeed / thump_threshold, game));
-			thump_value = 1f;
+		if (game.environment.collision(x, y + yspeed * Game.delta_time, get_width(), get_height()))  {
+			if (get_speed() > thump_threshold && yspeed > 0) {
+				game.add_effect(new Effect_thump(get_center_x() + xspeed * Game.delta_time, get_y() + yspeed * Game.delta_time + get_height(), yspeed / thump_threshold, game));
+				thump_value = 1f;
+			}
+
+			Sound.land.play();
 		}
 
 		super.logic();
