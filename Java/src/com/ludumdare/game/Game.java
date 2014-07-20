@@ -45,11 +45,10 @@ public class Game {
 
 		game_screen = new GameScreen(this);
 		enemy_list = new Enemy[20];
-		spawn_enemy(); /*TODO*/
 	}
 
 	public void spawn_enemy() {
-		int enemy_type =  GameMath.getRndInt(4, 4); /*TODO*/
+		int enemy_type =  GameMath.getRndInt(1, 4);
 		if (enemy_type < 4) { /* Flyer */
 			enemy_list[enemy_index] = new Flyer(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 8, Actor.face.LEFT, this);
 		} else if (enemy_type == 4) { /* Bouncer */
@@ -102,7 +101,7 @@ public class Game {
 
 		enemy_spawn_timer.logic();
 		if (enemy_spawn_timer.isDone()) {
-			//spawn_enemy(); /*TODO*/
+			spawn_enemy();
 			enemy_spawn_timer.reset();
 		}
 
