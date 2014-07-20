@@ -39,11 +39,11 @@ public class Game {
 	}
 
 	public void spawn_enemy() {
-		int enemy_type =  GameMath.getRndInt(0, 1);
-		if (enemy_type == 0) { /* Flyer */
+		int enemy_type =  GameMath.getRndInt(0, 4);
+		if (enemy_type < 4) { /* Flyer */
 			enemy_list[enemy_index] = new Flyer(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 12, Actor.face.LEFT, this);
-		} else if (enemy_type == 1) { /* Crawler */
-			int w = 20, h = 20,
+		} else if (enemy_type == 4) { /* Crawler */
+			int w = 26, h = 26,
 					x = GameMath.getRndInt(0, environment.num_high * environment.tile_height),
 					y = GameMath.getRndInt(0, environment.num_wide * environment.tile_width);
 			while (environment.collision(x, y, w, h)) {

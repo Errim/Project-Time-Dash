@@ -56,7 +56,7 @@ public class Actor extends Entity {
 
 	public void logic() {
 		hit_timer.logic();
-		if (!flying) {
+		if (!flying && is_in_air()) {
 			yspeed += GRAVITY_FACTOR * Game.delta_time;
 		}
 
