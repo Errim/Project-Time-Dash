@@ -2,6 +2,7 @@ package com.ludumdare.game.entity;
 
 import com.ludumdare.game.Game;
 import com.ludumdare.game.effects.Effect_blood;
+import com.ludumdare.game.effects.Effect_slash;
 import com.ludumdare.game.helper.Animation;
 import com.ludumdare.game.helper.Art;
 import gamemath.GameMath;
@@ -33,7 +34,11 @@ public class Enemy extends Actor {
 	private void kill(float dir) {
 		super.kill();
 		game.player.increase_score(score);
+
+		dir += (float)GameMath.getRndDouble(-45f, 45f);
+
 		game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
+		game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
 	}
 
 	public void logic() {
@@ -41,7 +46,7 @@ public class Enemy extends Actor {
 
 		super.logic();
 		
-		if (game.player.collides_with(this)) { game.player.take_hit(dmg); }
+		if (game.player.collides_with(this)) { game.player.take_hit(dmg, this); }
 	}
 
 	public void draw(Graphics g) {

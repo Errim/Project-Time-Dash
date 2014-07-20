@@ -20,7 +20,7 @@ public class Actor extends Entity {
 	public int hp = 1;
 	public final int dmg = 1;
 
-	final float invincibiliy_time = 0.5f;
+	final float invincibiliy_time = 0.04f;
 
 	private Timer hit_timer;
 

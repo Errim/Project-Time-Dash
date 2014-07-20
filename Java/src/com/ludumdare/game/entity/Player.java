@@ -4,9 +4,7 @@ import com.emilstrom.input.InputEngine;
 import com.emilstrom.input.KeyboardInput;
 import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
-import com.ludumdare.game.effects.Effect_dash;
-import com.ludumdare.game.effects.Effect_dust;
-import com.ludumdare.game.effects.Effect_thump;
+import com.ludumdare.game.effects.*;
 import com.ludumdare.game.helper.Animation;
 import com.ludumdare.game.helper.Art;
 import gamemath.GameMath;
@@ -20,7 +18,7 @@ import java.awt.event.KeyEvent;
 
 public class Player extends Actor {
 	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
-		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200;
+		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200, hit_force = 340;
 	public int player_score = 0;
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
 		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f),
@@ -48,8 +46,16 @@ public class Player extends Actor {
 		hp = 2;
 	}
 
-	public void take_hit(int dmg) {
+	public void take_hit(int dmg, Entity source) {
 		super.take_hit(dmg);
+
+		float dir = (float)GameMath.getDirection(source.get_center_x(), source.get_center_y(), get_center_x(), get_center_y());
+		xspeed = (float)GameMath.lengthDirX(dir, hit_force);
+		yspeed = (float)GameMath.lengthDirY(dir, hit_force);
+
+		game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
+		game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
+
 		if (!is_alive()) {
 			kill();
 		}
@@ -131,9 +137,6 @@ public class Player extends Actor {
 
 		dash_ability_value -= 1f;
 		jump_points = 1;
-	}
-
-	public void slide() {
 	}
 
 	public int can_wall_jump() {
