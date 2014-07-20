@@ -43,14 +43,14 @@ public class Game {
 		if (enemy_type == 0) { /* Flyer */
 			enemy_list[enemy_index] = new Flyer(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 12, Actor.face.LEFT, this);
 		} else if (enemy_type == 1) { /* Crawler */
-			int w = 12, h = 12,
+			int w = 20, h = 20,
 					x = GameMath.getRndInt(0, environment.num_high * environment.tile_height),
 					y = GameMath.getRndInt(0, environment.num_wide * environment.tile_width);
 			while (environment.collision(x, y, w, h)) {
 				x = GameMath.getRndInt(0, environment.num_high * environment.tile_height);
 				y = GameMath.getRndInt(0, environment.num_wide * environment.tile_width);
 			}
-			enemy_list[enemy_index] = new Crawler(x, y, w, h, Actor.face.LEFT, this);
+			enemy_list[enemy_index] = new Bouncer(x, y, w, h, Actor.face.LEFT, this);
 		}
 		enemy_index = (enemy_index + 1) % enemy_list.length;
 	}
