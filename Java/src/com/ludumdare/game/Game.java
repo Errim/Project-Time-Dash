@@ -72,10 +72,10 @@ public class Game {
 				(spawn_x >= game_screen.get_x() && spawn_x < game_screen.get_x() + game_screen.width &&
 				spawn_y >= game_screen.get_y() && spawn_y < game_screen.get_y() + game_screen.height));
 
-		int enemy_type =  GameMath.getRndInt(1, 4);
-		if (enemy_type < 4) { /* Flyer */
+		int enemy_type =  GameMath.getRndInt(0, 7);
+		if (enemy_type > 0) { /* Flyer */
 			enemy_list[enemy_index] = new Flyer(spawn_x, spawn_y, 12, 8, Actor.face.LEFT, this);
-		} else if (enemy_type == 4) { /* Bouncer */
+		} else if (enemy_type == 0) { /* Bouncer */
 			int w = 13, h = 13;
 			enemy_list[enemy_index] = new Bouncer(spawn_x, spawn_y, w, h, Actor.face.LEFT, this);
 		}
