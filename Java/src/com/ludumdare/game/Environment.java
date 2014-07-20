@@ -16,9 +16,9 @@ public class Environment {
 
 	public boolean collision(float x, float y, float width, float height) {
 		return (tile_clear(x, y)
-				&& tile_clear(x + width, y)
-				&& tile_clear(x, y + height)
-				&& tile_clear(x + width, y + height));
+				&& tile_clear(x + width - 1, y)
+				&& tile_clear(x, y + height - 1)
+				&& tile_clear(x + width - 1, y + height - 1));
 	}
 	public int find_tile(float x, float y) {
 		return get_tile((int)(x / tile_width), (int)(y / tile_height));
