@@ -13,7 +13,7 @@ import gamemath.GameMath;
 public class Environment {
 	Game game;
 
-	public int num_wide = 60, num_high = 40,
+	public int num_wide, num_high,
 			tile_width = 17, tile_height = 17;
 	public int tiles[];
 
@@ -61,10 +61,10 @@ public class Environment {
 	public Environment(Game game) {
 		this.game = game;
 
-		int map_width = Art.map.getWidth();
-		int map_height = Art.map.getHeight();
-		int[] map_data = new int[map_width * map_height];
-		Art.map.getRGB(0, 0, map_width, map_height, map_data, 0, map_width);
+		num_wide = Art.map.getWidth();
+		num_high = Art.map.getHeight();
+		int[] map_data = new int[num_wide * num_high];
+		Art.map.getRGB(0, 0, num_wide, num_high, map_data, 0, num_wide);
 
 		tiles = new int[num_wide * num_high];
 		for (int i = 0 ; i < tiles.length ; i++) {
