@@ -77,6 +77,7 @@ public class Player extends Actor {
 
 	public void kill() {
 		super.kill();
+		Sound.death.play();
 		//game.start_new_game();
 	}
 
