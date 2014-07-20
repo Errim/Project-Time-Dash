@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class Player extends Actor {
 	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
 		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200, hit_force = 340, slide_interval = 0.25f, slide_force = 300;
-	public int player_score = 0;
+
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
 		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f),
 		animation_thump = new Animation(Art.characterSet, 0, 5, 3, 0.25f);
@@ -53,6 +53,10 @@ public class Player extends Actor {
 	int die_blood_list_i = 0;
 	Timer die_blood_timer = new Timer(0.05f, false);
 
+	//Points
+	public int player_score = 0;
+	float score_alpha = 0f;
+
 	public Player(float x, float y, float width, float height, boolean collision, face facing, Game game) {
 		super(x, y, width, height, collision, facing, game);
 		player_shadow = new Player_shadow(this);
@@ -82,6 +86,7 @@ public class Player extends Actor {
 
 	public void increase_score(int score) {
 		player_score += score;
+		score_alpha = 1f;
 	}
 
 	public void jump() {
@@ -121,6 +126,8 @@ public class Player extends Actor {
 
 	public void dash() {
 		if (dash_ability_value < 1f) return;
+
+		game.show_tut = false;
 
 		float dash_position[] = player_shadow.get_position();
 
@@ -203,6 +210,8 @@ public class Player extends Actor {
 	public void logic() {
 		animation_run.logic(Math.abs(xspeed) / max_speed);
 		animation_idle.logic(1f);
+
+		score_alpha -= Game.delta_time;
 
 		if (!is_alive()) {
 			die_blood_timer.logic();
@@ -342,8 +351,12 @@ public class Player extends Actor {
 
 		player_shadow.draw(g);
 
-		g.setColor(Color.BLACK);
-		g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35, get_screen_y());
+		if (score_alpha > 0) {
+			g.setColor(new Color(0, 109, 138, (int) (255 * score_alpha)));
+			g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35, get_screen_y());
+			g.setColor(new Color(0, 194, 245, (int) (GameMath.getRndInt(0, 255) * score_alpha)));
+			g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35 + 1, get_screen_y() - 1);
+		}
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 20f) {

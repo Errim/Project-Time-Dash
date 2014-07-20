@@ -17,7 +17,6 @@ import java.awt.image.RescaleOp;
  * Created by Emil on 2014-07-19.
  */
 public class Game {
-	public static Timer first_game_timer;
 	public static float delta_time, real_delta_time;
 	public Player player;
 
@@ -39,9 +38,10 @@ public class Game {
 	float black_screen = 1f;
 
 	float logo_alpha = 2f;
+	public boolean show_tut = true;
+	float tut_alpha = 0f;
 
 	public Game() {
-		first_game_timer = new Timer(15f, false);
 		player_die_timer.real = true;
 		start_new_game();
 	}
@@ -104,12 +104,18 @@ public class Game {
 
 		if (black_screen < 0) black_screen = 0;
 
-		logo_alpha -= delta_time * 0.6f;
+		logo_alpha -= delta_time * 0.4f;
+		if (show_tut) {
+			if (logo_alpha <= 0) {
+				tut_alpha += delta_time * 0.9f;
+				if (tut_alpha > 1) tut_alpha = 1;
+			}
+		} else tut_alpha -= delta_time * 0.4f;
 
 		player.logic();
 		for(Enemy e : enemy_list) if (e != null) e.logic();
 
-		enemy_spawn_timer.logic();
+		if (logo_alpha <= 0) enemy_spawn_timer.logic();
 		if (enemy_spawn_timer.isDone()) {
 			spawn_enemy();
 			enemy_spawn_timer.reset();
@@ -118,8 +124,6 @@ public class Game {
 		game_screen.logic();
 
 		for(Effect e : effect_list) if (e != null) e.logic();
-
-		first_game_timer.logic();
 	}
 
 	public void draw(Graphics g) {
@@ -134,11 +138,22 @@ public class Game {
 			g.fillRect(0, 0, Dash_component.GAME_W, Dash_component.GAME_H);
 		}
 
-		if (!first_game_timer.isDone()) {
-			g.setColor(Color.BLACK);
-			g.drawString(message_1, 10, 20);
-			g.drawString(message_2, 10, 35);
-			g.drawString(message_3, 10, 50);
+		if (tut_alpha > 0f) {
+			int x = 10,
+					y = 20;
+
+			g.setColor(new Color(0, 109, 138, (int)(255 * tut_alpha)));
+			g.drawString(message_1, x, y);
+			g.drawString(message_2, x, y + 15);
+			g.drawString(message_3, x, y + 30);
+
+			x += 1;
+			y -= 1;
+
+			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 255) * tut_alpha)));
+			g.drawString(message_1, x, y);
+			g.drawString(message_2, x, y+15);
+			g.drawString(message_3, x, y+30);
 		}
 
 		if (logo_alpha > 0) {
@@ -164,9 +179,6 @@ public class Game {
 			rop = new RescaleOp(values, offset, null);
 
 			((Graphics2D) g).drawImage(img, rop, Dash_component.GAME_W / 2 - (w/2) * s, 40);
-
-//			g.drawImage(Art.logo, Dash_component.GAME_W / 2 - w/2, 40, null);
-//			g.drawImage(Art.logo_ripple, Dash_component.GAME_W / 2 - w/2, 40, null);
 		}
 	}
 }
