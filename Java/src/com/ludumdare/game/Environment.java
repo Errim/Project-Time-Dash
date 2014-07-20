@@ -15,7 +15,7 @@ public class Environment {
 	public int tiles[];
 
 	public boolean collision(float x, float y, float width, float height) {
-		return (tile_clear(x, y)
+		return !(tile_clear(x, y)
 				&& tile_clear(x + width - 1, y)
 				&& tile_clear(x, y + height - 1)
 				&& tile_clear(x + width - 1, y + height - 1));

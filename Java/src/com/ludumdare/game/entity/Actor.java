@@ -19,7 +19,7 @@ public class Actor extends Entity {
 	public int hp = 1;
 	public final int dmg = 1;
 
-	private final float invincibiliy_time = 0.5f;
+	final float invincibiliy_time = 0.5f;
 
 	private Timer hit_timer;
 
@@ -33,8 +33,8 @@ public class Actor extends Entity {
 	}
 
 	public boolean is_alive() { return hp > 0; }
-	public boolean is_in_air() { return game.environment.collision(x, y, width, height); }
-	public boolean is_on_ground() { return !game.environment.collision(x, y + 2, width, height); }
+	public boolean is_in_air() { return !game.environment.collision(x, y, width, height); }
+	public boolean is_on_ground() { return game.environment.collision(x, y + 2, width, height); }
 
 	public float minabs(float a, float b) {
 		return Math.abs(a) <= Math.abs(b) ? a : b;
@@ -59,13 +59,14 @@ public class Actor extends Entity {
 		float y_new = y + yspeed * Game.delta_time;
 
 		if (collision) {
-			if (game.environment.collision(x_new, y, width, height)) { x = x_new; }
+			if (!game.environment.collision(x_new, y, width, height)) { x = x_new; }
 			else {
 				x += minabs(game.environment.dist_x(x, x_new, y), game.environment.dist_x(x + width - 1, x_new, y));
 				xspeed = 0;
 			}
-			if (game.environment.collision(x, y_new, width, height)) { y = y_new; }
+			if (!game.environment.collision(x, y_new, width, height)) { y = y_new; }
 			else {
+				System.out.println("Bump");
 				y += minabs(game.environment.dist_y(y, x, y_new), game.environment.dist_y(y + height - 1, x, y_new));
 				yspeed = 0;
 			}
