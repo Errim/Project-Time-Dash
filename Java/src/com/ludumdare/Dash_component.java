@@ -46,7 +46,7 @@ public class Dash_component extends Applet implements Runnable {
 		Graphics bbg = back_buffer.getGraphics(),
 				g = this.getGraphics();
 
-		Font font = new Font("serif", Font.PLAIN, 12); /*TODO - This does nothing*/
+		Font font = new Font("serif", Font.PLAIN, 12);
 		bbg.setFont(font);
 
 		long prev_time = System.nanoTime();

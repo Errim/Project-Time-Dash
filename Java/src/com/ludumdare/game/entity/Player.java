@@ -319,7 +319,7 @@ public class Player extends Actor {
 		player_shadow.draw(g);
 
 		g.setColor(Color.BLACK);
-		g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 25, get_screen_y());
+		g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35, get_screen_y());
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 20f) {
