@@ -66,7 +66,6 @@ public class Actor extends Entity {
 			}
 			if (!game.environment.collision(x, y_new, width, height)) { y = y_new; }
 			else {
-				System.out.println("Bump");
 				y += minabs(game.environment.dist_y(y, x, y_new), game.environment.dist_y(y + height - 1, x, y_new));
 				yspeed = 0;
 			}

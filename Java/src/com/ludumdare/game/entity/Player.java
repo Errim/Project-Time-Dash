@@ -17,10 +17,8 @@ import java.awt.event.KeyEvent;
  */
 
 public class Player extends Actor {
-	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40;
-
-	public enum states {GROUND, AIR, WALL};
-	public states state;
+	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
+		wall_jump_force_x = 160, wall_jump_force_y = 200;
 
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
 		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f);
@@ -54,10 +52,16 @@ public class Player extends Actor {
 	}
 
 	public void jump() {
-		if (jump_points <= 0) return;
+		int wall_jump = can_wall_jump();
+		if (wall_jump != 0) {
+			xspeed = -wall_jump_force_x * wall_jump;
+			yspeed = -wall_jump_force_y;
+		} else {
+			if (jump_points <= 0) return;
 
-		yspeed = -jump_force;
-		if (!is_on_ground()) jump_points--;
+			yspeed = -jump_force;
+			if (!is_on_ground()) jump_points--;
+		}
 	}
 
 	public void jump_hold() {
@@ -110,6 +114,14 @@ public class Player extends Actor {
 	public void slide() {
 	}
 
+	public int can_wall_jump() {
+		if (is_on_ground()) return 0;
+		if (game.environment.collision(get_x() + 1, get_y(), get_width(), get_height())) return 1;
+		if (game.environment.collision(get_x()-1, get_y(), get_width(), get_height())) return -1;
+
+		return 0;
+	}
+
 	public void logic() {
 		animation_run.logic(Math.abs(xspeed) / max_speed);
 		animation_idle.logic(1f);
@@ -122,12 +134,22 @@ public class Player extends Actor {
 		if (is_on_ground() && yspeed >= 0) jump_points = 1;
 
 		float f = is_on_ground() ? friction : friction_air;
+		if (Math.abs(xspeed) > max_speed && is_on_ground()) f *= 0.6f;
 
-		if (xspeed > 0) xspeed = Math.max(0, xspeed - f * Game.delta_time);
-		if (xspeed < 0) xspeed = Math.min(0, xspeed + f * Game.delta_time);
+		float v_f = can_wall_jump() != 0 ? vertical_friction : 0;
 
-		if (in.isKeyDown(KeyEvent.VK_RIGHT)) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
-		if (in.isKeyDown(KeyEvent.VK_LEFT)) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
+		if (!is_in_air() || !in.isKeyDown(KeyEvent.VK_RIGHT))
+			if (xspeed > 0) xspeed = Math.max(0, xspeed - f * Game.delta_time);
+		if (!is_in_air() || !in.isKeyDown(KeyEvent.VK_LEFT))
+			if (xspeed < 0) xspeed = Math.min(0, xspeed + f * Game.delta_time);
+
+		if (v_f > 0) {
+			if (yspeed > 0) yspeed = Math.max(0, yspeed - v_f * Game.delta_time);
+			if (yspeed < 0) yspeed = Math.min(0, yspeed + v_f * Game.delta_time);
+		}
+
+		if (in.isKeyDown(KeyEvent.VK_RIGHT) && xspeed < max_speed) xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
+		if (in.isKeyDown(KeyEvent.VK_LEFT) && xspeed > -max_speed) xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
 		if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
 		if (in.isKeyDown(KeyEvent.VK_Z) && !old_input.isKeyDown(KeyEvent.VK_Z)) jump();
 		if (in.isKeyDown(KeyEvent.VK_X) && !old_input.isKeyDown(KeyEvent.VK_X)) dash();
@@ -161,7 +183,7 @@ public class Player extends Actor {
 		boolean flip_sprite = facing == face.LEFT;
 
 		if (is_on_ground()) {
-			if (Math.abs(xspeed) > 0.01f) {
+			if (Math.abs(xspeed) > 20f) {
 				if (Math.abs(xspeed) <= max_speed && (old_input.isKeyDown(KeyEvent.VK_LEFT) || old_input.isKeyDown(KeyEvent.VK_RIGHT)))
 					animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
 				else
@@ -170,16 +192,13 @@ public class Player extends Actor {
 			else
 				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
 		} else {
-			if (yspeed > 0)
+			int wall_jump = can_wall_jump();
+			if (wall_jump != 0)
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump == 1 ? false : true, g);
+			else if (yspeed > 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, g);
 			else
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, g);
-		}
-
-		if (state == states.GROUND) {
-		} else if (state == states.AIR) {
-		} else if (state == states.WALL) {
-		} else {
 		}
 
 		if (effect_dash != null) effect_dash.draw(g);

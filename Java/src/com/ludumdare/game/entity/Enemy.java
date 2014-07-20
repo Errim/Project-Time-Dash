@@ -19,6 +19,7 @@ public class Enemy extends Actor {
 	Effect_blood effect_blood;
 
 	Animation animation = new Animation(Art.batSet, 0, 0, 6, 0.1f);
+	float target_x, target_y;
 
 	public Enemy(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -49,10 +50,13 @@ public class Enemy extends Actor {
 		float player_x = game.player.get_x(),
 				player_y = game.player.get_y();
 
-		if (player_x > x) facing = face.RIGHT;
+		target_x += (player_x - target_x) * 1.5f * Game.delta_time;
+		target_y += (player_y - target_y) * 1.5f * Game.delta_time;
+
+		if (target_x > x) facing = face.RIGHT;
 		else facing = face.LEFT;
 
-		double dir = GameMath.getDirection(x, y, player_x, player_y);
+		double dir = GameMath.getDirection(x, y, target_x, target_y);
 		x += GameMath.lengthDirX((float)dir, float_speed * Game.delta_time);
 		y += GameMath.lengthDirY((float)dir, float_speed * Game.delta_time);
 

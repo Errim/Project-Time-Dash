@@ -91,6 +91,13 @@ public class Player_shadow {
 		return (player.game.environment.collision(pos[0], pos[1] + 2, get_width(), get_height()));
 	}
 
+	public int can_wall_jump() {
+		if (player.game.environment.collision(get_x()+1, get_y(), get_width(), get_height())) return 1;
+		if (player.game.environment.collision(get_x()-1, get_y(), get_width(), get_height())) return -1;
+
+		return 0;
+	}
+
 	public void logic() {
 		if (player.dash_ability_value < 1f) return;
 
@@ -116,7 +123,10 @@ public class Player_shadow {
 			else
 				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, 0.4f, g);
 		} else {
-			if (yspeed > 0)
+			int wall_jump = can_wall_jump();
+			if (wall_jump != 0)
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump == 1 ? false : true, 0.4f, g);
+			else if (yspeed > 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, 0.4f, g);
 			else
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, 0.4f, g);
