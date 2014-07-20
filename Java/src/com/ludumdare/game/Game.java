@@ -42,8 +42,16 @@ public class Game {
 	}
 
 	public void start_new_game() {
-		player = new Player(36, 36, 8, 16, true, Actor.face.RIGHT, this);
 		environment = new Environment(this);
+
+		float player_x, player_y;
+
+		do {
+			player_x = (float)GameMath.getRndDouble(0, environment.num_wide * environment.tile_width);
+			player_y = (float)GameMath.getRndDouble(0, environment.num_high * environment.tile_height);
+		} while(environment.collision(player_x, player_y, 8, 16));
+
+		player = new Player(player_x, player_y, 8, 16, true, Actor.face.RIGHT, this);
 
 		game_screen = new GameScreen(this);
 		enemy_list = new Enemy[20];
@@ -54,7 +62,7 @@ public class Game {
 		if (enemy_type < 4) { /* Flyer */
 			enemy_list[enemy_index] = new Flyer(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 8, Actor.face.LEFT, this);
 		} else if (enemy_type == 4) { /* Bouncer */
-			int w = 10, h = 10,
+			int w = 13, h = 13,
 					x = GameMath.getRndInt(0, environment.num_high * environment.tile_height),
 					y = GameMath.getRndInt(0, environment.num_wide * environment.tile_width);
 			while (environment.collision(x, y, w, h)) {

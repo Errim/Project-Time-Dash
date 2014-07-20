@@ -22,6 +22,11 @@ public class Flyer extends Enemy {
 	public Flyer(float x, float y, float height, float width, face facing, Game game) {
 		super(x, y, height, width, false, facing, game);
 		flying = true;
+
+		target_x = game.player.get_center_x();
+		target_y = game.player.get_center_y();
+
+		float_speed = (float)GameMath.getRndDouble(60f, 90f);
 	}
 
 	public void logic() {

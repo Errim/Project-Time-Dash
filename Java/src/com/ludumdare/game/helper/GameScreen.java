@@ -15,10 +15,10 @@ public class GameScreen {
 
 	public GameScreen(Game game) {
 		this.game = game;
-		x = 0;
-		y = 0;
 		width = Dash_component.GAME_W;
 		height = Dash_component.GAME_H;
+		x = game.player.get_center_x() - width/2;
+		y = game.player.get_center_y() - height/2;
 	}
 
 	public int get_x() { return (int)x; }

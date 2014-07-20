@@ -26,6 +26,8 @@ public class Bouncer extends Enemy {
 		gravity_multi = 0.3f;
 	}
 
+	public boolean is_on_ground(float f) { return game.environment.collision(get_x(), get_y() + f, get_width(), get_height()); }
+
 	public void jump(float force) {
 		yspeed = -force;
 		game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float) GameMath.getDirection(0, 0, xspeed, yspeed), 1f, 10, 0.2f, game));
@@ -65,6 +67,13 @@ public class Bouncer extends Enemy {
 
 		if (!is_alive()) return;
 
-		Art.gorillaSet.drawTile(get_screen_x(), get_screen_y(), is_on_ground() ? 0 : 1, 0, g);
+		boolean swap = facing == face.LEFT;
+
+		if (!is_on_ground(13f))
+			Art.bouncerSet.drawTile(get_screen_x(), get_screen_y(), 2, 0, swap, g);
+		else if (is_on_ground(2f))
+			Art.bouncerSet.drawTile(get_screen_x(), get_screen_y(), 0, 0, swap, g);
+		else
+			Art.bouncerSet.drawTile(get_screen_x(), get_screen_y(), 1, 0, swap, g);
 	}
 }
