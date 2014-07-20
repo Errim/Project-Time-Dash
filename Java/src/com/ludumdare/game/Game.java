@@ -150,7 +150,7 @@ public class Game {
 			x += 1;
 			y -= 1;
 
-			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 255) * tut_alpha)));
+			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 156) * tut_alpha)));
 			g.drawString(message_1, x, y);
 			g.drawString(message_2, x, y+15);
 			g.drawString(message_3, x, y+30);
@@ -179,6 +179,12 @@ public class Game {
 			rop = new RescaleOp(values, offset, null);
 
 			((Graphics2D) g).drawImage(img, rop, Dash_component.GAME_W / 2 - (w/2) * s, 40);
+
+			g.setColor(new Color(0, 109, 138, (int)(255 * Math.min(1, logo_alpha))));
+			g.drawString("A game by Emil&Emil", 2, Dash_component.GAME_H - 12);
+
+			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 156) * Math.min(1, logo_alpha))));
+			g.drawString("A game by Emil&Emil", 2 + 1, Dash_component.GAME_H - 12 - 1);
 		}
 	}
 }

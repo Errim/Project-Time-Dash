@@ -65,7 +65,7 @@ public class Dash_component extends Applet implements Runnable {
 			Game.real_delta_time = delta_time;
 
 			//Logic
-			//if (this.isfocus)
+			if (this.hasFocus())
 			game.logic();
 
 			//Draw

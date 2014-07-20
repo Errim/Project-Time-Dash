@@ -46,6 +46,7 @@ public class Player extends Actor {
 	float thump_value = 0;
 
 	float slide_timer = 0;
+	int slide_dir = 0;
 	float gravity_immunity = 0f;
 
 	//Dying
@@ -258,9 +259,12 @@ public class Player extends Actor {
 					xspeed = Math.min(xspeed + (acceleration + f) * Game.delta_time, max_speed);
 
 				if (!old_input.isKeyDown(KeyEvent.VK_RIGHT)) {
-					if (slide_timer < slide_interval)
+					if (slide_timer < slide_interval && slide_dir == 1)
 						slide(1);
-					else slide_timer = 0f;
+					else {
+						slide_timer = 0f;
+						slide_dir = 1;
+					}
 				}
 			}
 			if (in.isKeyDown(KeyEvent.VK_LEFT)) {
@@ -273,9 +277,12 @@ public class Player extends Actor {
 					xspeed = Math.max(xspeed - (acceleration + f) * Game.delta_time, -max_speed);
 
 				if (!old_input.isKeyDown(KeyEvent.VK_LEFT)) {
-					if (slide_timer < slide_interval)
+					if (slide_timer < slide_interval && slide_dir == -1)
 						slide(-1);
-					else slide_timer = 0f;
+					else {
+						slide_timer = 0f;
+						slide_dir = -1;
+					}
 				}
 			}
 			if (in.isKeyDown(KeyEvent.VK_Z)) jump_hold();
@@ -346,7 +353,7 @@ public class Player extends Actor {
 		if (score_alpha > 0) {
 			g.setColor(new Color(0, 109, 138, (int) (255 * score_alpha)));
 			g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35, get_screen_y());
-			g.setColor(new Color(0, 194, 245, (int) (GameMath.getRndInt(0, 255) * score_alpha)));
+			g.setColor(new Color(0, 194, 245, (int) (GameMath.getRndInt(0, 156) * score_alpha)));
 			g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35 + 1, get_screen_y() - 1);
 		}
 
