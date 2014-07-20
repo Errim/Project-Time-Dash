@@ -44,6 +44,9 @@ public class Enemy extends Actor {
 		float player_x = game.player.get_x(),
 				player_y = game.player.get_y();
 
+		if (player_x > x) facing = face.RIGHT;
+		else facing = face.LEFT;
+
 		double dir = GameMath.getDirection(x, y, player_x, player_y);
 		x += GameMath.lengthDirX((float)dir, float_speed * Game.delta_time);
 		y += GameMath.lengthDirY((float)dir, float_speed * Game.delta_time);
@@ -57,6 +60,6 @@ public class Enemy extends Actor {
 		//g.setColor(game.player.collides_with(this) ? Color.RED : Color.CYAN);
 		//g.fillRect(get_screen_x(), get_screen_y(), get_width(), get_height());
 
-		animation.draw(get_screen_x(), get_screen_y(), g);
+		animation.draw(get_screen_x(), get_screen_y(), facing == face.RIGHT ? false : true, g);
 	}
 }

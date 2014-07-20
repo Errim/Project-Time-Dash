@@ -25,10 +25,15 @@ public class Game {
 	public GameScreen game_screen;
 
 	public Game() {
+		start_new_game();
+	}
+
+	public void start_new_game() {
 		player = new Player(36, 36, 16, 16, true, Actor.face.RIGHT, this);
 		environment = new Environment(this);
 
 		game_screen = new GameScreen(this);
+		enemy_list = new Enemy[20];
 	}
 
 	public void spawn_enemy() {
