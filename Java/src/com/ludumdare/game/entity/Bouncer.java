@@ -22,6 +22,7 @@ public class Bouncer extends Enemy {
 		jump_timer = new Timer(jump_time, true);
 		flying = false;
 		hp = 2;
+		score = 2;
 	}
 
 	public void jump(float force) {
@@ -33,7 +34,8 @@ public class Bouncer extends Enemy {
 		if (!is_alive()) return;
 		if (is_on_ground()) {
 			xspeed = 0;
-			jump_timer.logic(Game.delta_time);
+			jump_timer.logic(Game.delta_time); /*TODO - WATCH HERE, CHANGE jump_time ABOVE :: PROFIT*/
+			System.out.println(jump_timer.percentageDone());
 			if (!was_on_ground) {
 				jump_timer.reset();
 			}
