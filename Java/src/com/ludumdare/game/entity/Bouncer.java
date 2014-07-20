@@ -22,7 +22,6 @@ public class Bouncer extends Enemy {
 		super(x, y, height, width, true, facing, game);
 		jump_timer = new Timer(jump_time, true);
 		flying = false;
-		hp = 2;
 		gravity_multi = 0.3f;
 	}
 

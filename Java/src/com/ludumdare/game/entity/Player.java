@@ -56,19 +56,19 @@ public class Player extends Actor {
 	public Player(float x, float y, float width, float height, boolean collision, face facing, Game game) {
 		super(x, y, width, height, collision, facing, game);
 		player_shadow = new Player_shadow(this);
-		hp = 2;
 	}
 
 	public void take_hit(int dmg, Entity source) {
-		super.take_hit(dmg);
+		if (hit_timer.isDone()) {
+			hit_timer.reset();
+			hp -= dmg;
+			float dir = (float) GameMath.getDirection(source.get_center_x(), source.get_center_y(), get_center_x(), get_center_y());
+			xspeed = (float) GameMath.lengthDirX(dir, hit_force);
+			yspeed = (float) GameMath.lengthDirY(dir, hit_force);
 
-		float dir = (float)GameMath.getDirection(source.get_center_x(), source.get_center_y(), get_center_x(), get_center_y());
-		xspeed = (float)GameMath.lengthDirX(dir, hit_force);
-		yspeed = (float)GameMath.lengthDirY(dir, hit_force);
-
-		game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
-		game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
-
+			game.add_effect(new Effect_blood(get_center_x(), get_center_y(), dir, game));
+			game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
+		}
 		if (!is_alive()) {
 			kill();
 		}

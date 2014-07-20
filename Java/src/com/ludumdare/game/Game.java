@@ -112,7 +112,7 @@ public class Game {
 
 		for(Effect e : effect_list) if (e != null) e.logic();
 
-		first_game_timer.logic(delta_time);
+		first_game_timer.logic();
 	}
 
 	public void draw(Graphics g) {

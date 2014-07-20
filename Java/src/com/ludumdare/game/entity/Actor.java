@@ -23,7 +23,7 @@ public class Actor extends Entity {
 
 	final float invincibiliy_time = 0.04f;
 
-	private Timer hit_timer;
+	protected Timer hit_timer;
 
 	//Physics
 	public float xspeed=0f, yspeed=0f;
