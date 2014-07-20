@@ -18,11 +18,10 @@ public class Bouncer extends Enemy {
 
 	public Bouncer(float x, float y, float height, float width, face facing, Game game) {
 		super(x, y, height, width, true, facing, game);
-		jump_timer = new Timer(big_time, true);
+		jump_timer = new Timer(small_time, true);
 		flying = false;
 		hp = 2;
 	}
-
 
 	public void jump(float force) {
 		yspeed = -force;
@@ -42,7 +41,9 @@ public class Bouncer extends Enemy {
 			}
 		}
 
-		if (game.environment.collision(x, y + yspeed * Game.delta_time, get_width(), get_height()) && yspeed > 0 && is_in_air()) {
+		jump_timer.logic();
+
+		if (game.environment.collision(x, y + yspeed * 5 * Game.delta_time, get_width(), get_height()) && yspeed > 0 && is_in_air()) {
 			jump_timer.reset();
 		}
 

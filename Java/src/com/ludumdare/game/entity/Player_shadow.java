@@ -118,7 +118,10 @@ public class Player_shadow {
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 0.01f) {
-				animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, 0.4f, g);
+				if (Math.abs(xspeed) <= Player.max_speed + 20)
+					animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, 0.4f, g);
+				else
+					Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 3, flip_sprite, 0.4f, g);
 			}
 			else
 				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, 0.4f, g);

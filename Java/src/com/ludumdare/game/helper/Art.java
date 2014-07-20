@@ -7,7 +7,8 @@ import java.awt.image.BufferedImage;
 public class Art {
 	public static Tileset characterSet = new Tileset(loadImage("/character_set.png"), 16, 16),
 		batSet = new Tileset(loadImage("/bat.png"), 12, 12),
-		gorillaSet = new Tileset(loadImage("/gorilla.png"), 26, 26);
+		gorillaSet = new Tileset(loadImage("/gorilla.png"), 26, 26),
+		tileset = new Tileset(loadImage("/tileset.png"), 17, 17);
 	public static BufferedImage map = (BufferedImage)loadImage("/map.png");
 	
 	public static Image loadImage(String path) {

@@ -77,7 +77,8 @@ public class Environment {
 		return tile / num_wide;
 	}
 	private void draw_tile(Graphics g, int tile) {
-		g.setColor(Color.black);
-		g.fillRect(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), tile_width, tile_height);
+		//g.setColor(Color.black);
+		//g.fillRect(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), tile_width, tile_height);
+		Art.tileset.drawTile(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), 0, 0, g);
 	}
 }
