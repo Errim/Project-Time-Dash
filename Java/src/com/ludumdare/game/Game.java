@@ -159,7 +159,7 @@ public class Game {
 		if (logo_alpha > 0) {
 			int w = Art.logo.getWidth(),
 					h = Art.logo.getHeight(),
-					s = 3;
+					s = 4;
 
 			BufferedImage img = new BufferedImage(w*s, h*s, BufferedImage.TYPE_INT_ARGB);
 			for(int x=0; x<w*s; x++) for(int y=0; y<h*s; y++) img.setRGB(x, y, 0x00000000);

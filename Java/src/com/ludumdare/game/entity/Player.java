@@ -288,7 +288,7 @@ public class Player extends Actor {
 		flying = gravity_immunity > 0;
 
 		//Landing sounds on wall
-		if (game.environment.collision(x + xspeed * 3 * Game.delta_time, y, get_width(), get_height()) && can_wall_jump() == 0)
+		if (game.environment.collision(x + xspeed * Game.delta_time, y, get_width(), get_height()) && Math.abs(xspeed) > 100)
 			Sound.land.play();
 
 		//Record position LEL

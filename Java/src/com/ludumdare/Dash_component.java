@@ -55,6 +55,8 @@ public class Dash_component extends Applet implements Runnable {
 
 		Game game = new Game();
 
+		this.requestFocus();
+
 		while(running) {
 			//Delta time
 			long new_time = System.nanoTime();
@@ -63,6 +65,7 @@ public class Dash_component extends Applet implements Runnable {
 			Game.real_delta_time = delta_time;
 
 			//Logic
+			//if (this.isfocus)
 			game.logic();
 
 			//Draw
