@@ -4,11 +4,14 @@ import com.ludumdare.Dash_component;
 import com.ludumdare.game.effects.Effect;
 import com.ludumdare.game.entity.*;
 import com.ludumdare.game.entity.Enemy;
+import com.ludumdare.game.helper.Art;
 import com.ludumdare.game.helper.GameScreen;
 import com.ludumdare.game.helper.Timer;
 import gamemath.GameMath;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 /**
  * Created by Emil on 2014-07-19.
@@ -34,6 +37,8 @@ public class Game {
 
 	Timer player_die_timer = new Timer(1.8f, false);
 	float black_screen = 1f;
+
+	float logo_alpha = 2f;
 
 	public Game() {
 		first_game_timer = new Timer(15f, false);
@@ -99,6 +104,8 @@ public class Game {
 
 		if (black_screen < 0) black_screen = 0;
 
+		logo_alpha -= delta_time * 0.6f;
+
 		player.logic();
 		for(Enemy e : enemy_list) if (e != null) e.logic();
 
@@ -132,6 +139,34 @@ public class Game {
 			g.drawString(message_1, 10, 20);
 			g.drawString(message_2, 10, 35);
 			g.drawString(message_3, 10, 50);
+		}
+
+		if (logo_alpha > 0) {
+			int w = Art.logo.getWidth(),
+					h = Art.logo.getHeight(),
+					s = 3;
+
+			BufferedImage img = new BufferedImage(w*s, h*s, BufferedImage.TYPE_INT_ARGB);
+			for(int x=0; x<w*s; x++) for(int y=0; y<h*s; y++) img.setRGB(x, y, 0x00000000);
+
+			img.getGraphics().drawImage(Art.logo, 0, 0, w*s, h*s, null);
+
+			float[] values = {1f, 1f, 1f, Math.min(1, logo_alpha)};
+			float[] offset = new float[4];
+			RescaleOp rop = new RescaleOp(values, offset, null);
+
+			((Graphics2D) g).drawImage(img, rop, Dash_component.GAME_W / 2 - (w/2)*s, 40);
+
+			for(int x=0; x<w*s; x++) for(int y=0; y<h*s; y++) img.setRGB(x, y, 0x00000000);
+			img.getGraphics().drawImage(Art.logo_ripple, 0, 0, w*s, h*s, null);
+
+			values = new float[] {1f, 1f, 1f, Math.min(1, logo_alpha) * (float)GameMath.getRndDouble()};
+			rop = new RescaleOp(values, offset, null);
+
+			((Graphics2D) g).drawImage(img, rop, Dash_component.GAME_W / 2 - (w/2) * s, 40);
+
+//			g.drawImage(Art.logo, Dash_component.GAME_W / 2 - w/2, 40, null);
+//			g.drawImage(Art.logo_ripple, Dash_component.GAME_W / 2 - w/2, 40, null);
 		}
 	}
 }
