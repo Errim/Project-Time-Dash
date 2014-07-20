@@ -8,23 +8,23 @@ import java.awt.*;
 /**
  * Created by Emil on 2014-07-20.
  */
-public class Effect_dust {
+public class Effect_dust extends Effect {
 	class Particle {
 		float x, y,
 				xspeed, yspeed, size, rotation;
 
-		float alpha, redness;
+		float alpha, whiteness;
 
 		Polygon p;
 
-		public Particle(float x, float y, float dir, float force, float a, float redness, float size, float rotation) {
+		public Particle(float x, float y, float dir, float force, float a, float whiteness, float size, float rotation) {
 			this.x = x;
 			this.y = y;
 
 			xspeed = (float)GameMath.lengthDirX(dir, force);
 			yspeed = (float)GameMath.lengthDirY(dir, force);
 			alpha = a;
-			this.redness = redness;
+			this.whiteness = whiteness;
 			this.size = size;
 			this.rotation = rotation;
 
@@ -46,10 +46,10 @@ public class Effect_dust {
 			x += xspeed * Game.delta_time;
 			y += yspeed * Game.delta_time;
 
-			xspeed -= xspeed * 15.0f * Game.delta_time;
-			yspeed -= yspeed * 15.0f * Game.delta_time;
+			xspeed -= xspeed * 5.0f * Game.delta_time;
+			yspeed -= yspeed * 5.0f * Game.delta_time;
 
-			alpha -= 0.4f * Game.delta_time;
+			alpha -= 1.4f * Game.delta_time;
 		}
 
 		public void draw(Graphics g) {
@@ -60,31 +60,32 @@ public class Effect_dust {
 			for(int i=0; i<p.npoints; i++)
 				new_p.addPoint(get_screen_x() + p.xpoints[i], get_screen_y() + p.ypoints[i]);
 
-			g.setColor(new Color(redness, 0f, 0f, alpha));
+			g.setColor(new Color(whiteness, whiteness, whiteness, alpha));
 			g.fillPolygon(new_p);
 		}
 	}
 
-	Game game;
-	Particle particle_list[] = new Particle[80];
+	Particle particle_list[];
 
-	public Effect_dust(float x, float y, float dir, Game game) {
-		this.game = game;
+	public Effect_dust(float x, float y, float dir, int n, float perc, Game game) {
+		super(game);
+
+		particle_list = new Particle[n];
 
 		for(int i=0; i<particle_list.length; i++) {
-			float particle_dir = dir + (float)Math.pow((float)GameMath.getRndDouble(-1f, 1f), 5f) * 30f,
-					particle_force = (float)GameMath.getRndDouble(150f, 1250f),
+			float particle_dir = dir + (float)Math.pow((float)GameMath.getRndDouble(-1f, 1f), 5f) * 40f,
+					particle_force = (float)GameMath.getRndDouble(20f, 150f),
 					particle_alpha = (float)GameMath.getRndDouble(0.4f, 1f),
-					particle_redness = (float)GameMath.getRndDouble(0.6f, 1f),
-					particle_size = (float)GameMath.getRndDouble(2f, 6f),
+					particle_whiteness = (float)GameMath.getRndDouble(0.6f, 0.8f),
+					particle_size = (float)GameMath.getRndDouble(1f, 3f),
 					particle_rotation = (float)GameMath.getRndDouble(0f, 360f);
 
-			if (i > particle_list.length - 30) {
+			if (i > particle_list.length * perc) {
 				particle_dir = (float)GameMath.getRndDouble(0, 360);
-				particle_force = (float)GameMath.getRndDouble(100f, 300f);
+				particle_force = (float)GameMath.getRndDouble(0f, 90f);
 			}
 
-			particle_list[i] = new Particle(x, y, particle_dir, particle_force, particle_alpha, particle_redness, particle_size, particle_rotation);
+			particle_list[i] = new Particle(x, y, particle_dir, particle_force, particle_alpha, particle_whiteness, particle_size, particle_rotation);
 		}
 	}
 

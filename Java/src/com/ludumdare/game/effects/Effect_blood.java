@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * Created by Emil on 2014-07-19.
  */
-public class Effect_blood {
+public class Effect_blood extends Effect {
 	class Particle {
 		float x, y,
 			xspeed, yspeed, size, rotation;
@@ -65,11 +65,10 @@ public class Effect_blood {
 		}
 	}
 
-	Game game;
 	Particle particle_list[] = new Particle[80];
 
 	public Effect_blood(float x, float y, float dir, Game game) {
-		this.game = game;
+		super(game);
 
 		for(int i=0; i<particle_list.length; i++) {
 			float particle_dir = dir + (float)Math.pow((float)GameMath.getRndDouble(-1f, 1f), 5f) * 30f,

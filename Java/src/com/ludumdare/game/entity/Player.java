@@ -5,6 +5,8 @@ import com.emilstrom.input.KeyboardInput;
 import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
 import com.ludumdare.game.effects.Effect_dash;
+import com.ludumdare.game.effects.Effect_dust;
+import com.ludumdare.game.effects.Effect_thump;
 import com.ludumdare.game.helper.Animation;
 import com.ludumdare.game.helper.Art;
 import gamemath.GameMath;
@@ -18,12 +20,11 @@ import java.awt.event.KeyEvent;
 
 public class Player extends Actor {
 	public static final float acceleration = 1200, max_speed = 120, friction = 800, friction_air = 140, jump_force = 200, jump_hold_inc = 400, jump_hold_limit = 40, vertical_friction = 300,
-		wall_jump_force_x = 160, wall_jump_force_y = 200;
+		wall_jump_force_x = 160, wall_jump_force_y = 200, thump_threshold = 200;
 	public int player_score = 0;
 	Animation animation_run = new Animation(Art.characterSet, 0, 0, 6, 0.1f),
-		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f);
-
-	Effect_dash effect_dash;
+		animation_idle = new Animation(Art.characterSet, 0, 1, 2, 0.4f),
+		animation_thump = new Animation(Art.characterSet, 0, 5, 3, 0.25f);
 
 	KeyboardInput old_input;
 
@@ -39,6 +40,7 @@ public class Player extends Actor {
 	int jump_points = 1;
 	float wall_sticky = 0;
 	int prev_wall_jump = 0;
+	float thump_value = 0;
 
 	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, facing, game);
@@ -68,12 +70,19 @@ public class Player extends Actor {
 			xspeed = -wall_jump_force_x * wall_jump;
 			yspeed = -wall_jump_force_y;
 
+			game.add_effect(new Effect_dust(get_center_x() + get_width()/2 * wall_jump, get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 30, 0.8f, game));
+
 			wall_sticky = 0;
 		} else {
 			if (jump_points <= 0) return;
 
 			yspeed = -jump_force;
-			if (!is_on_ground()) jump_points--;
+			if (!is_on_ground()) {
+				jump_points--;
+				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 20, 0.9f, game));
+			} else {
+				game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 10, 0.2f, game));
+			}
 		}
 	}
 
@@ -97,7 +106,7 @@ public class Player extends Actor {
 		float dir = (float)GameMath.getDirection(x, y, dash_x, dash_y),
 				len = (float)GameMath.getDistance(x, y, dash_x, dash_y);
 
-		effect_dash = new Effect_dash(get_center_x(), get_center_y(), dash_x + width/2, dash_y + height/2, game);
+		game.add_effect(new Effect_dash(get_center_x(), get_center_y(), dash_x + width/2, dash_y + height/2, game));
 
 		//KILL STUFF YEYEYEEYYE AHDUIAWHDHWID FEELS GOOD AROUND MY DICK - wau
 		final int precision = (int)(len / 5);
@@ -138,8 +147,6 @@ public class Player extends Actor {
 	public void logic() {
 		animation_run.logic(Math.abs(xspeed) / max_speed);
 		animation_idle.logic(1f);
-
-		if (effect_dash != null) effect_dash.logic();
 
 		KeyboardInput in = InputEngine.getKeyboardInput();
 		if (old_input == null) old_input = in;
@@ -208,6 +215,14 @@ public class Player extends Actor {
 
 		old_input = in;
 
+		//Thump to the ground!
+		thump_value -= Game.delta_time / 0.4f;
+
+		if (game.environment.collision(x, y + yspeed * Game.delta_time, get_width(), get_height()) && get_speed() > thump_threshold && yspeed > 0) {
+			game.add_effect(new Effect_thump(get_center_x() + xspeed * Game.delta_time, get_y() + yspeed * Game.delta_time + get_height(), yspeed / thump_threshold, game));
+			thump_value = 1f;
+		}
+
 		super.logic();
 
 		player_shadow.logic();
@@ -223,23 +238,30 @@ public class Player extends Actor {
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 20f) {
-				if (Math.abs(xspeed) <= max_speed && (old_input.isKeyDown(KeyEvent.VK_LEFT) || old_input.isKeyDown(KeyEvent.VK_RIGHT)))
-					animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
+				if (Math.abs(xspeed) <= max_speed) {
+					if (old_input.isKeyDown(KeyEvent.VK_LEFT) || old_input.isKeyDown(KeyEvent.VK_RIGHT))
+						animation_run.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
+					else
+						Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 5, flip_sprite, g);
+				}
 				else
 					Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 3, flip_sprite, g);
 			}
-			else
-				animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
+			else {
+				if (thump_value <= 0) {
+					animation_idle.draw(get_screen_x(), get_screen_y(), flip_sprite, g);
+				} else {
+					animation_thump.draw(get_screen_x(), get_screen_y(), flip_sprite, 1f, (1-thump_value) * animation_thump.animation_length, g);
+				}
+			}
 		} else {
 			int wall_jump = can_wall_jump();
 			if (wall_jump != 0 && wall_sticky != 0)
-				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump == 1 ? false : true, g);
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump != 1, g);
 			else if (yspeed > 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, g);
 			else
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, g);
 		}
-
-		if (effect_dash != null) effect_dash.draw(g);
 	}
 }

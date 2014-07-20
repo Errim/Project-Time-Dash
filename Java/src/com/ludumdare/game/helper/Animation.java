@@ -10,7 +10,7 @@ import java.awt.*;
 public class Animation {
 	public Tileset tileset;
 	int origin_x, origin_y;
-	int animation_length;
+	public int animation_length;
 	float frame_length;
 
 	float frame_index;
@@ -29,12 +29,19 @@ public class Animation {
 	}
 
 	public void draw(int x, int y, Graphics g) {
-		draw(x, y, false, 1f, g);
+		draw(x, y, false, 1f, frame_index, g);
 	}
 	public void draw(int x, int y, boolean flip, Graphics g) {
-		draw(x, y, flip, 1f, g);
+		draw(x, y, flip, 1f, frame_index, g);
 	}
 	public void draw(int x, int y, boolean flip, float opacity, Graphics g) {
-		tileset.drawTile(x, y, origin_x + (int)frame_index, origin_y, flip, opacity, g);
+		draw(x, y, flip, opacity, frame_index, g);
+	}
+
+	public void draw(int x, int y, float frame, Graphics g) {
+		draw(x, y, false, 1f, frame, g);
+	}
+	public void draw(int x, int y, boolean flip, float opacity, float frame, Graphics g) {
+		tileset.drawTile(x, y, origin_x + (int)frame, origin_y, flip, opacity, g);
 	}
 }

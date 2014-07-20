@@ -22,8 +22,6 @@ public class Flyer extends Enemy {
 	}
 
 	public void logic() {
-		if (effect_blood != null) effect_blood.logic();
-
 		if (!is_alive()) return;
 
 		animation.logic(1f);
@@ -42,13 +40,9 @@ public class Flyer extends Enemy {
 		double dir = GameMath.getDirection(x, y, target_x, target_y);
 		x += GameMath.lengthDirX((float)dir, float_speed * Game.delta_time);
 		y += GameMath.lengthDirY((float)dir, float_speed * Game.delta_time);
-
-		if (game.player.collides_with(this)) { game.player.take_hit(dmg); }
 	}
 
 	public void draw(Graphics g) {
-		if (effect_blood != null) effect_blood.draw(g);
-
 		if (!is_alive()) return;
 
 		//g.setColor(game.player.collides_with(this) ? Color.RED : Color.CYAN);

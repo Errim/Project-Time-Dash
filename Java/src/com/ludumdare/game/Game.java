@@ -1,5 +1,6 @@
 package com.ludumdare.game;
 
+import com.ludumdare.game.effects.Effect;
 import com.ludumdare.game.entity.*;
 import com.ludumdare.game.entity.Enemy;
 import com.ludumdare.game.helper.GameScreen;
@@ -21,6 +22,9 @@ public class Game {
 
 	public Environment environment;
 	public GameScreen game_screen;
+
+	private Effect effect_list[] = new Effect[20];
+	private int effect_i = 0;
 
 	public Game() {
 		start_new_game();
@@ -54,6 +58,11 @@ public class Game {
 		return false;
 	}
 
+	public void add_effect(Effect e) {
+		effect_list[effect_i] = e;
+		effect_i = (effect_i + 1) % effect_list.length;
+	}
+
 	public void logic() {
 		player.logic();
 		for(Enemy e : enemy_list) if (e != null) e.logic();
@@ -65,11 +74,15 @@ public class Game {
 		}
 
 		game_screen.logic();
+
+		for(Effect e : effect_list) if (e != null) e.logic();
 	}
 
 	public void draw(Graphics g) {
 		environment.draw(g);
 		for(Enemy e : enemy_list) if (e != null) e.draw(g);
 		player.draw(g);
+
+		for(Effect e : effect_list) if (e != null) e.draw(g);
 	}
 }

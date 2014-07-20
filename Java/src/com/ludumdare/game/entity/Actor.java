@@ -3,6 +3,7 @@ package com.ludumdare.game.entity;
 import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
 import com.ludumdare.game.helper.Timer;
+import gamemath.GameMath;
 
 import java.awt.*;
 
@@ -25,6 +26,8 @@ public class Actor extends Entity {
 
 	//Physics
 	float xspeed=0f, yspeed=0f;
+
+	public float get_speed() { return (float)GameMath.getDistance(0, 0, xspeed, yspeed); }
 
 	public Actor(float x, float y, float height, float width, boolean collision, face facing, Game game) {
 		super(x, y, height, width, collision, game);
