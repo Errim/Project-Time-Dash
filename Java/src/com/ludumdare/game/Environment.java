@@ -10,8 +10,8 @@ import com.ludumdare.game.helper.Art;
 public class Environment {
 	Game game;
 
-	public int num_wide = 30, num_high = 20,
-			tile_width = 32, tile_height = 32;
+	public int num_wide = 60, num_high = 40,
+			tile_width = 17, tile_height = 17;
 	public int tiles[];
 
 	public boolean collision(float x, float y, float width, float height) {
