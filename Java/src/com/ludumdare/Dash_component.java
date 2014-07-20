@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
 /**
  * Created by Emil on 2014-07-19.
@@ -46,7 +48,7 @@ public class Dash_component extends Applet implements Runnable {
 		Graphics bbg = back_buffer.getGraphics(),
 				g = this.getGraphics();
 
-		Font font = new Font("serif", Font.PLAIN, 12);
+		Font font = new Font("serif", Font.BOLD, 12);
 		bbg.setFont(font);
 
 		long prev_time = System.nanoTime();

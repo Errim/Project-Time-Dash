@@ -18,7 +18,7 @@ public class Game {
 	public static float delta_time, real_delta_time;
 	public Player player;
 
-	public final static String message_1 = "You are trapped in the future.";
+	public final static String message_1 = "The future is now and the past is but a shadow.";
 	public final static String message_2 = "Press x to dash back into the past,";
 	public final static String message_3 = "slaying every enemy in your wake!";
 
@@ -128,10 +128,10 @@ public class Game {
 		}
 
 		if (!first_game_timer.isDone()) {
-			g.setColor(Color.PINK);
+			g.setColor(Color.BLACK);
 			g.drawString(message_1, 10, 20);
-			g.drawString(message_2, 10, 30);
-			g.drawString(message_3, 10, 40);
+			g.drawString(message_2, 10, 35);
+			g.drawString(message_3, 10, 50);
 		}
 	}
 }
