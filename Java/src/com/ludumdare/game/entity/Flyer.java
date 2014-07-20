@@ -16,6 +16,9 @@ public class Flyer extends Enemy {
 
 	Animation animation = new Animation(Art.batSet, 0, 0, 6, 0.1f);
 
+	@Override
+	public int get_screen_y() { return super.get_screen_y() - (Art.batSet.tileheight - get_height()) / 2; }
+
 	public Flyer(float x, float y, float height, float width, face facing, Game game) {
 		super(x, y, height, width, false, facing, game);
 		flying = true;

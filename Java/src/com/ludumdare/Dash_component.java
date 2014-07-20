@@ -55,7 +55,7 @@ public class Dash_component extends Applet implements Runnable {
 			long new_time = System.nanoTime();
 			float delta_time = (new_time - prev_time) * 0.000000001f;  //Seconds
 			prev_time = new_time;
-			Game.delta_time = delta_time;
+			Game.real_delta_time = delta_time;
 
 			//Logic
 			game.logic();

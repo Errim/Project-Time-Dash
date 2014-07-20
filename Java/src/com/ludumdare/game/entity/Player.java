@@ -27,6 +27,9 @@ public class Player extends Actor {
 
 	KeyboardInput old_input;
 
+	@Override
+	public int get_screen_x() { return super.get_screen_x() - (Art.characterSet.tilewidth - get_width()) / 2; }
+
 	//Dashing stuff
 	public static final float dash_length = 0.6f, dash_accuracy = 50f; //IN SECONDS WHOO
 
@@ -44,8 +47,8 @@ public class Player extends Actor {
 	float slide_timer = 0;
 	float gravity_immunity = 0f;
 
-	public Player(float x, float y, float height, float width, boolean collision, face facing, Game game) {
-		super(x, y, height, width, collision, facing, game);
+	public Player(float x, float y, float width, float height, boolean collision, face facing, Game game) {
+		super(x, y, width, height, collision, facing, game);
 		player_shadow = new Player_shadow(this);
 		hp = 2;
 	}
@@ -67,7 +70,7 @@ public class Player extends Actor {
 
 	public void kill() {
 		super.kill();
-		game.start_new_game();
+		//game.start_new_game();
 	}
 
 	public void increase_score(int score) {

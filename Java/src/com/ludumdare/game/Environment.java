@@ -1,7 +1,10 @@
 package com.ludumdare.game;
 
 import java.awt.*;
+
+import com.ludumdare.Dash_component;
 import com.ludumdare.game.helper.Art;
+import gamemath.GameMath;
 
 /**
  * Created by J on 19/07/2014.
@@ -40,9 +43,20 @@ public class Environment {
 		return (Math.abs(y - up) < Math.abs(y - down)) ? y - up : y - down;
 	}
 	public void draw(Graphics g) {
+		draw_background(g);
+
 		for (int i = 0 ; i < tiles.length ; i++) {
 			if (tiles[i] != 0) { draw_tile(g, i); }
 		}
+	}
+	public void draw_background(Graphics g) {
+		int offset_x = (int)GameMath.mod(-game.game_screen.get_x() * 1f, tile_width) - tile_width,
+				offset_y = (int)GameMath.mod(-game.game_screen.get_y() * 1f, tile_height) - tile_height;
+
+		for(int xx = 0; xx < Dash_component.GAME_W / tile_width + 2; xx++)
+			for(int yy=0; yy < Dash_component.GAME_H / tile_height + 2; yy++) {
+				Art.tileset.drawTile(tile_width * xx + offset_x, tile_height * yy + offset_y, 1, 0, g);
+			}
 	}
 	public Environment(Game game) {
 		this.game = game;

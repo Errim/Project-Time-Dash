@@ -29,8 +29,8 @@ public class Actor extends Entity {
 
 	public float get_speed() { return (float)GameMath.getDistance(0, 0, xspeed, yspeed); }
 
-	public Actor(float x, float y, float height, float width, boolean collision, face facing, Game game) {
-		super(x, y, height, width, collision, game);
+	public Actor(float x, float y, float width, float height, boolean collision, face facing, Game game) {
+		super(x, y, width, height, collision, game);
 		this.facing = facing;
 		hit_timer = new Timer(invincibiliy_time, true);
 	}

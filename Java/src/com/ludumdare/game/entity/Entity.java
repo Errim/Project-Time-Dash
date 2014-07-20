@@ -32,7 +32,7 @@ public class Entity {
 				yy < y + height);
 	}
 
-	public Entity(float x, float y, float height, float width, boolean collision, Game game) {
+	public Entity(float x, float y, float width, float height, boolean collision, Game game) {
 		this.x = x;
 		this.y = y;
 		this.height = height;

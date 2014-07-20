@@ -6,8 +6,8 @@ import com.ludumdare.game.Game;
  * Created by Emil on 2014-03-19.
  */
 public class Timer {
-	boolean realTimer = false;
 	float timer, timerMax;
+	public boolean real = false;
 
 	public Timer(float currentTimer, boolean startFinished) {
 		this.timerMax = currentTimer;
@@ -30,12 +30,14 @@ public class Timer {
 	public void logic() {
 		if (isDone()) return;
 
-		timer += Game.delta_time;
+		float d = real ? Game.real_delta_time : Game.delta_time;
+
+		timer += d;
 	}
 
 	public void logic(float factor) {
 		if (isDone()) return;
 
-		timer += Game.delta_time;
+		timer += (real ? Game.real_delta_time : Game.delta_time) * factor;
 	}
 }
