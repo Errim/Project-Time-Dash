@@ -59,8 +59,8 @@ public class Game {
 	}
 
 	public void draw(Graphics g) {
+		environment.draw(g);
 		player.draw(g);
 		for(Enemy e : enemy_list) if (e != null) e.draw(g);
-		environment.draw(g);
 	}
 }

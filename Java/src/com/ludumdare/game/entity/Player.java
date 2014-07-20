@@ -168,7 +168,6 @@ public class Player extends Actor {
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, g);
 		}
 
-
 		if (state == states.GROUND) {
 		} else if (state == states.AIR) {
 		} else if (state == states.WALL) {

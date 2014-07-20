@@ -98,8 +98,8 @@ public class Player_shadow {
 		xspeed = current_speed[0];
 		yspeed = current_speed[1];
 
-		if (xspeed > 0) look_dir = 1;
-		if (xspeed < 0) look_dir = -1;
+		if (xspeed > 5) look_dir = 1;
+		if (xspeed < 5) look_dir = -1;
 
 		animation_run.logic(Math.abs(xspeed) / Player.max_speed);
 	}
