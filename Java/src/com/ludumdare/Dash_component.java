@@ -45,6 +45,8 @@ public class Dash_component extends Applet implements Runnable {
 		BufferedImage back_buffer = new BufferedImage(GAME_W, GAME_H, BufferedImage.TYPE_INT_ARGB);
 		Graphics bbg = back_buffer.getGraphics(),
 				g = this.getGraphics();
+		//Font font = Font.createFont()
+		//g.setFont(font);
 
 		long prev_time = System.nanoTime();
 
@@ -64,7 +66,6 @@ public class Dash_component extends Applet implements Runnable {
 			bbg.setColor(new Color(0.5f, 0.5f, 0.5f));
 			bbg.fillRect(0, 0, GAME_W, GAME_H);
 			game.draw(bbg);
-			bbg.drawString(Integer.toString((int)(1f / delta_time)), 2, 12);
 			g.drawImage(back_buffer, 0, 0, GAME_W * GAME_S, GAME_H * GAME_S, 0, 0, GAME_W, GAME_H, null);
 
 			try{ Thread.sleep(2); } catch(Exception e) {}

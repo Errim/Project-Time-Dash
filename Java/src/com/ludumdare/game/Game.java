@@ -18,7 +18,9 @@ public class Game {
 	public static float delta_time, real_delta_time;
 	public Player player;
 
-	public final static String message = "You are trapped in the future.\nPress x to dash back into the past,\nslaying every enemy in your wake!";
+	public final static String message_1 = "You are trapped in the future.";
+	public final static String message_2 = "Press x to dash back into the past,";
+	public final static String message_3 = "slaying every enemy in your wake!";
 
 	public Enemy enemy_list[] = new Enemy[20];
 	public int enemy_index = 0;
@@ -34,7 +36,7 @@ public class Game {
 	float black_screen = 1f;
 
 	public Game() {
-		first_game_timer = new Timer(15f, true);
+		first_game_timer = new Timer(15f, false);
 		player_die_timer.real = true;
 		start_new_game();
 	}
@@ -62,16 +64,6 @@ public class Game {
 		enemy_list[enemy_index] = new Bouncer(x, y, w, h, Actor.face.LEFT, this);
 		}
 		enemy_index = (enemy_index + 1) % enemy_list.length;
-	}
-
-	public boolean get_enemy_collision(float x, float y, float w, float h) {
-		for(Enemy e : enemy_list) {
-			if (e != null && e.is_alive()) {
-				if (e.collides_with(x, y, w, h)) return true;
-			}
-		}
-
-		return false;
 	}
 
 	public void add_effect(Effect e) {
@@ -117,11 +109,6 @@ public class Game {
 		for(Enemy e : enemy_list) if (e != null) e.draw(g);
 		player.draw(g);
 
-		if (!first_game_timer.isDone()) {
-			g.setColor(Color.BLACK);
-			g.drawString(message, player.get_screen_x(), player.get_screen_y());
-		}
-
 		for(Effect e : effect_list) if (e != null) e.draw(g);
 
 		if (black_screen > 0f) {
@@ -129,6 +116,11 @@ public class Game {
 			g.fillRect(0, 0, Dash_component.GAME_W, Dash_component.GAME_H);
 		}
 
-		g.drawString(Float.toString(player_die_timer.percentageDone()), 2, 22);
+		if (!first_game_timer.isDone()) {
+			g.setColor(Color.PINK);
+			g.drawString(message_1, 10, 20);
+			g.drawString(message_2, 10, 30);
+			g.drawString(message_3, 10, 40);
+		}
 	}
 }

@@ -13,6 +13,7 @@ import java.awt.*;
 
 public class Actor extends Entity {
 	public static final float GRAVITY_FACTOR = 600f;
+	protected float gravity_multi = 1.0f;
 
 	public enum face {RIGHT, LEFT}
 	public face facing = face.RIGHT;
@@ -57,7 +58,7 @@ public class Actor extends Entity {
 	public void logic() {
 		hit_timer.logic();
 		if (!flying && is_in_air()) {
-			yspeed += GRAVITY_FACTOR * Game.delta_time;
+			yspeed += GRAVITY_FACTOR * gravity_multi * Game.delta_time;
 		}
 
 		float x_new = x + xspeed * Game.delta_time;

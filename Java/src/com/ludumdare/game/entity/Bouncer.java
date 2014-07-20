@@ -12,9 +12,10 @@ import gamemath.GameMath;
  */
 
 public class Bouncer extends Enemy {
-	private static final float jump_force = 360f, jump_time = 0.9f, hunt_speed = 45f;
+	private static final float jump_force = 140f, jump_time = 0.9f, hunt_speed = 45f;
 	private Timer jump_timer;
 	private boolean was_on_ground = false;
+	private float xspeed_air = 0f;
 
 
 	public Bouncer(float x, float y, float height, float width, face facing, Game game) {
@@ -22,7 +23,7 @@ public class Bouncer extends Enemy {
 		jump_timer = new Timer(jump_time, true);
 		flying = false;
 		hp = 2;
-		score = 2;
+		gravity_multi = 0.3f;
 	}
 
 	public void jump(float force) {
@@ -41,18 +42,19 @@ public class Bouncer extends Enemy {
 			else if (jump_timer.isDone() && yspeed <= 0) {
 				jump(jump_force);
 			}
-		} else {
-			float player_x = game.player.get_x();
 
+			float player_x = game.player.get_x();
 			target_x += (player_x - target_x) * 1.5f * Game.delta_time;
 
 			if (target_x > x) {
 				facing = face.RIGHT;
-				xspeed = hunt_speed;
+				xspeed_air = hunt_speed;
 			} else {
 				facing = face.LEFT;
-				xspeed = -hunt_speed;
+				xspeed_air = -hunt_speed;
 			}
+		} else {
+			xspeed = xspeed_air;
 		}
 		was_on_ground = is_on_ground();
 		super.logic();
