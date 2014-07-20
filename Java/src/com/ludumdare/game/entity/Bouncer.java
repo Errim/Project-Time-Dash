@@ -12,7 +12,7 @@ import gamemath.GameMath;
  */
 public class Bouncer extends Enemy {
 	private static final float big_jump = 300f, small_jump = 120f,
-			small_time = 0.2f, big_time = 3.5f;
+			small_time = 0.6f, big_time = 1.2f, hunt_speed = 35f;
 	private int jump = 0; /* 0-1 small ; 2 big */
 	private Timer jump_timer;
 	private boolean was_on_ground = false;
@@ -20,7 +20,7 @@ public class Bouncer extends Enemy {
 
 	public Bouncer(float x, float y, float height, float width, face facing, Game game) {
 		super(x, y, height, width, true, facing, game);
-		jump_timer = new Timer(small_time, true);
+		jump_timer = new Timer(big_time, true);
 		flying = false;
 		hp = 2;
 	}
@@ -34,8 +34,14 @@ public class Bouncer extends Enemy {
 		if (!is_alive()) return;
 		if (is_on_ground()) {
 			jump_timer.logic(Game.delta_time);
-			if (!was_on_ground) { jump_timer.reset(); System.out.println("resett");}
-			else if (jump_timer.isDone()) {
+			if (!was_on_ground) {
+				if (jump == 0) {
+					jump_timer.reset(big_time);
+				} else {
+					jump_timer.reset(small_time);
+				}
+			}
+			else if (jump_timer.isDone() && yspeed <= 0) {
 				if (jump < 2) {
 					jump(small_jump);
 					jump++;
@@ -44,8 +50,18 @@ public class Bouncer extends Enemy {
 					jump = 0;
 				}
 			}
-			was_on_ground = true;
 		}
+		was_on_ground = is_on_ground();
+
+		float player_x = game.player.get_x();
+
+		target_x += (player_x - target_x) * 1.5f * Game.delta_time;
+
+		if (target_x > x) facing = face.RIGHT;
+		else facing = face.LEFT;
+
+		double dir = GameMath.getDirection(x, y, target_x, target_y);
+		x += GameMath.lengthDirX((float)dir, hunt_speed * Game.delta_time);
 
 		super.logic();
 	}
