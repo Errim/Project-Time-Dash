@@ -83,7 +83,7 @@ public class Game {
 	}
 
 	public void logic() {
-		delta_time = real_delta_time * Math.max(0, 1 - player_die_timer.percentageDone());
+		delta_time = real_delta_time * Math.max(0, 1 - player_die_timer.percentageDone() * 0.8f);
 
 		if (!player.is_alive())
 			player_die_timer.logic();

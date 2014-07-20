@@ -2,7 +2,6 @@ package com.ludumdare.game.entity;
 
 import com.emilstrom.input.InputEngine;
 import com.emilstrom.input.KeyboardInput;
-import com.ludumdare.game.Environment;
 import com.ludumdare.game.Game;
 import com.ludumdare.game.effects.*;
 import com.ludumdare.game.helper.Animation;
@@ -41,7 +40,7 @@ public class Player extends Actor {
 	float dash_ability_value = 0f;
 
 	//Jumping around
-	int jump_points = 1;
+	int jump_points = 1, air_slide_points = 1;
 	float wall_sticky = 0;
 	int prev_wall_jump = 0;
 	float thump_value = 0;
@@ -96,6 +95,7 @@ public class Player extends Actor {
 			wall_sticky = 0;
 
 			jump_points = 1;
+			air_slide_points = 1;
 		} else {
 			if (jump_points <= 0) return;
 
@@ -168,22 +168,27 @@ public class Player extends Actor {
 
 		dash_ability_value -= 1f;
 		jump_points = 1;
+		air_slide_points = 1;
 
 		Sound.dash.play();
 	}
 
 	public void slide(int dir) {
 		if (!is_on_ground()) {
-			if (jump_points <= 0) return;
+			if (air_slide_points <= 0) return;
 
 			xspeed = slide_force * dir * 0.8f;
 			yspeed = 0;
 			game.add_effect(new Effect_dust(get_center_x(), get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 3f, 30, 1f, game));
 			gravity_immunity = 0.2f;
-			jump_points--;
+			air_slide_points--;
+
+			Sound.slide.play();
 		} else {
 			xspeed = slide_force * dir;
 			game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float) GameMath.getDirection(0, 0, xspeed, yspeed), 2f, 30, 0.95f, game));
+
+			Sound.slide.play();
 		}
 	}
 
@@ -211,7 +216,10 @@ public class Player extends Actor {
 		KeyboardInput in = InputEngine.getKeyboardInput();
 		if (old_input == null) old_input = in;
 
-		if (is_on_ground() && yspeed >= 0) jump_points = 1;
+		if (is_on_ground() && yspeed >= 0) {
+			jump_points = 1;
+			air_slide_points = 1;
+		}
 
 		float f = is_on_ground() ? friction : friction_air;
 		if (Math.abs(xspeed) > max_speed && is_on_ground()) f *= 0.6f;
@@ -278,6 +286,10 @@ public class Player extends Actor {
 		gravity_immunity -= Game.delta_time;
 		flying = gravity_immunity > 0;
 
+		//Landing sounds on wall
+		if (game.environment.collision(x + xspeed * 3 * Game.delta_time, y, get_width(), get_height()) && can_wall_jump() == 0)
+			Sound.land.play();
+
 		//Record position LEL
 		dash_record_timer += Game.delta_time;
 		if (dash_record_timer >= 1 / dash_accuracy) {
@@ -302,9 +314,12 @@ public class Player extends Actor {
 			if (get_speed() > thump_threshold && yspeed > 0) {
 				game.add_effect(new Effect_thump(get_center_x() + xspeed * Game.delta_time, get_y() + yspeed * Game.delta_time + get_height(), yspeed / thump_threshold, game));
 				thump_value = 1f;
-			}
 
-			Sound.land.play();
+				float force = yspeed / thump_threshold;
+				if (force > 2f)
+					Sound.landhard.play();
+				else Sound.landmedium.play();
+			} else Sound.land.play();
 		}
 
 		super.logic();

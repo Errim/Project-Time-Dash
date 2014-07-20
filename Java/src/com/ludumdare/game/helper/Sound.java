@@ -6,7 +6,10 @@ public class Sound {
 	public static Sound jump = loadSound("/snd/jump.wav"),
 		dash = loadSound("/snd/dash.wav"),
 		death = loadSound("/snd/death.wav"),
-		land = loadSound("/snd/land2.wav");
+		land = loadSound("/snd/land2.wav"),
+		landmedium = loadSound("/snd/landmedium.wav"),
+		landhard = loadSound("/snd/landhard.wav"),
+		slide = loadSound("/snd/slide.wav");
 
 	public static Sound loadSound(String fileName) {
 		Sound snd = new Sound();
