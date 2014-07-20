@@ -14,7 +14,10 @@ import java.awt.*;
  */
 public class Game {
 	public static float delta_time;
+	public static Timer first_game_timer;
 	public Player player;
+
+	public final static String message = "You are trapped in the future.\nPress x to dash back into the past,\nslaying every enemy in your wake!";
 
 	public Enemy enemy_list[] = new Enemy[20];
 	public int enemy_index = 0;
@@ -27,6 +30,7 @@ public class Game {
 	private int effect_i = 0;
 
 	public Game() {
+		first_game_timer = new Timer(15f, true);
 		start_new_game();
 	}
 
@@ -42,8 +46,8 @@ public class Game {
 		int enemy_type =  GameMath.getRndInt(0, 4);
 		if (enemy_type < 4) { /* Flyer */
 			enemy_list[enemy_index] = new Flyer(GameMath.getRndInt(0, environment.num_wide * environment.tile_width), GameMath.getRndInt(0, environment.num_high * environment.tile_height), 12, 12, Actor.face.LEFT, this);
-		} else if (enemy_type == 4) { /* Crawler */
-			int w = 26, h = 26,
+		} else if (enemy_type == 4) { /* Bouncer */
+			int w = 10, h = 10,
 					x = GameMath.getRndInt(0, environment.num_high * environment.tile_height),
 					y = GameMath.getRndInt(0, environment.num_wide * environment.tile_width);
 			while (environment.collision(x, y, w, h)) {
@@ -83,12 +87,19 @@ public class Game {
 		game_screen.logic();
 
 		for(Effect e : effect_list) if (e != null) e.logic();
+
+		first_game_timer.logic(delta_time);
 	}
 
 	public void draw(Graphics g) {
 		environment.draw(g);
 		for(Enemy e : enemy_list) if (e != null) e.draw(g);
 		player.draw(g);
+
+		if (!first_game_timer.isDone()) {
+			g.setColor(Color.BLACK);
+			g.drawString(message, player.get_screen_x(), player.get_screen_y());
+		}
 
 		for(Effect e : effect_list) if (e != null) e.draw(g);
 	}

@@ -282,7 +282,7 @@ public class Player extends Actor {
 		boolean flip_sprite = facing == face.LEFT;
 
 		g.setColor(Color.BLACK);
-		g.drawString(Integer.toString(player_score), get_screen_x(), get_screen_y());
+		g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 25, get_screen_y());
 
 		if (is_on_ground()) {
 			if (Math.abs(xspeed) > 20f) {
