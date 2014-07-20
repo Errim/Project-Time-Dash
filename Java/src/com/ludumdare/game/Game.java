@@ -148,6 +148,7 @@ public class Game {
 			g.setColor(new Color(0, 109, 138, (int)(255 * tut_alpha)));
 			g.setFont(font_big);
 			g.drawString(message_1, x, y);
+			g.setColor(new Color(0, 109, 138, (int)(255 * tut_alpha)));
 			g.setFont(font_text);
 			g.drawString(message_2, x, y + 20);
 			g.drawString(message_3, x, y + 35);
@@ -158,6 +159,7 @@ public class Game {
 			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 156) * tut_alpha)));
 			g.setFont(font_big);
 			g.drawString(message_1, x, y);
+			g.setColor(new Color(0, 194, 245, (int)(GameMath.getRndInt(0, 94) * tut_alpha)));
 			g.setFont(font_text);
 			g.drawString(message_2, x, y + 20);
 			g.drawString(message_3, x, y + 35);

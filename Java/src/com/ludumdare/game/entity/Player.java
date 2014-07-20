@@ -75,6 +75,8 @@ public class Player extends Actor {
 			game.add_effect(new Effect_slash(get_center_x(), get_center_y(), dir, game));
 
 			Sound.death.play();
+
+			score_alpha = 1f;
 		}
 	}
 	public void increase_score(int score) {
@@ -353,7 +355,7 @@ public class Player extends Actor {
 		if (score_alpha > 0) {
 			g.setColor(new Color(0, 109, 138, (int) (255 * score_alpha)));
 			g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35, get_screen_y());
-			g.setColor(new Color(0, 194, 245, (int) (GameMath.getRndInt(0, 156) * score_alpha)));
+			g.setColor(new Color(0, 194, 245, (int) (GameMath.getRndInt(0, 80) * score_alpha)));
 			g.drawString(Integer.toString(player_score) + " Pts", get_screen_x() - 35 + 1, get_screen_y() - 1);
 		}
 
