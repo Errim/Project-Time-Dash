@@ -262,7 +262,7 @@ public class Player extends Actor {
 			if (wall_jump != 0 && wall_sticky != 0)
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 4, wall_jump != 1, g);
 			else if (yspeed > 0)
-				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 1, 2, flip_sprite, g);
+				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), yspeed > thump_threshold ? 2 : 1, 2, flip_sprite, g);
 			else
 				Art.characterSet.drawTile(get_screen_x(), get_screen_y(), 0, 2, flip_sprite, g);
 		}

@@ -25,7 +25,7 @@ public class Actor extends Entity {
 	private Timer hit_timer;
 
 	//Physics
-	float xspeed=0f, yspeed=0f;
+	public float xspeed=0f, yspeed=0f;
 
 	public float get_speed() { return (float)GameMath.getDistance(0, 0, xspeed, yspeed); }
 
