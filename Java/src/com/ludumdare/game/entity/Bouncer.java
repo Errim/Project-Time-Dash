@@ -19,19 +19,21 @@ public class Bouncer extends Enemy {
 	}
 
 	public void jump() {
-		if (jump < 2) {
-			yspeed = -small_jump;
-			jump++;
-		} else {
-			yspeed = -big_jump;
-			jump = 0;
-		}
+		if (is_on_ground()) {
+			if (jump < 2) {
+				yspeed = -small_jump;
+				jump++;
+			} else {
+				yspeed = -big_jump;
+				jump = 0;
+			}
 
-		game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 10, 0.2f, game));
+			game.add_effect(new Effect_dust(get_center_x(), get_y() + get_height(), (float) GameMath.getDirection(0, 0, xspeed, yspeed), 10, 0.2f, game));
+		}
 	}
 
 	public void logic() {
-		if (is_on_ground()) { jump(); }
+		jump();
 		super.logic();
 	}
 
