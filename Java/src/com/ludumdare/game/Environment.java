@@ -24,7 +24,7 @@ public class Environment {
 				&& tile_clear(x + width - 1, y + height - 1));
 	}
 	public int find_tile(float x, float y) {
-		return get_tile((int)(x / tile_width), (int)(y / tile_height));
+		return get_tile((int)(x / tile_width), (int)(GameMath.mod(y, 0, num_high * tile_height) / tile_height));
 	}
 	public int get_x(int tile) {
 		return get_xth(tile) * tile_width;
