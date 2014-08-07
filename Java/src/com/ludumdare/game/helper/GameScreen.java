@@ -13,12 +13,16 @@ public class GameScreen {
 	public float x, y,
 		width, height;
 
+	float max_x;
+
 	public GameScreen(Game game) {
 		this.game = game;
 		width = Dash_component.GAME_W;
 		height = Dash_component.GAME_H;
 		x = game.player.get_center_x() - width/2;
 		y = game.player.get_center_y() - height/2;
+
+		max_x = game.environment.tile_width * game.environment.num_wide - width;
 	}
 
 	public int get_x() { return (int)x; }
@@ -47,5 +51,8 @@ public class GameScreen {
 
 		x += (target_x - x) * 2.0f * Game.delta_time;
 		y += (target_y - y) * 2.0f * Game.delta_time;
+
+		if (x < 0) x = 0;
+		if (x >= max_x) x = max_x;
 	}
 }

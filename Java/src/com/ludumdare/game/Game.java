@@ -71,6 +71,8 @@ public class Game {
 		do {
 			spawn_x = (float)GameMath.getRndDouble(0, environment.num_wide * environment.tile_width);
 			spawn_y = (float)GameMath.getRndDouble(0, environment.num_high * environment.tile_height);
+
+			spawn_y += game_screen.y + game_screen.height / 2 - (environment.num_high * environment.tile_height)/2;
 		} while(environment.collision(spawn_x, spawn_y, 13, 13) ||
 				(spawn_x >= game_screen.get_x() && spawn_x < game_screen.get_x() + game_screen.width &&
 				spawn_y >= game_screen.get_y() && spawn_y < game_screen.get_y() + game_screen.height));
