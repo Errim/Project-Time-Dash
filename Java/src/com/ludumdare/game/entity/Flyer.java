@@ -36,16 +36,18 @@ public class Flyer extends Enemy {
 
 		super.logic();
 
-		float player_x = game.player.get_x(),
-				player_y = game.player.get_y();
+		float player_x = game.player.get_center_x(),
+				player_y = game.player.get_center_y();
 
-		target_x += (player_x - target_x) * 1.5f * Game.delta_time;
-		target_y += (player_y - target_y) * 1.5f * Game.delta_time;
+		target_x += (player_x - target_x) * 3.4f * Game.delta_time;
+		target_y += (player_y - target_y) * 3.4f * Game.delta_time;
 
-		if (target_x > x) facing = face.RIGHT;
-		else facing = face.LEFT;
+		if (Math.abs(target_x - get_center_x()) > 1) {
+			if (target_x > x) facing = face.RIGHT;
+			else facing = face.LEFT;
+		}
 
-		double dir = GameMath.getDirection(x, y, target_x, target_y);
+		double dir = GameMath.getDirection(get_center_x(), get_center_y(), target_x, target_y);
 		x += GameMath.lengthDirX((float)dir, float_speed * Game.delta_time);
 		y += GameMath.lengthDirY((float)dir, float_speed * Game.delta_time);
 	}

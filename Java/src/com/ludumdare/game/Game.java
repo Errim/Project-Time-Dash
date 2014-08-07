@@ -27,7 +27,7 @@ public class Game {
 	public final static String message_2 = "Press x to dash back into the past,";
 	public final static String message_3 = "slaying every enemy in your wake!";
 
-	public Enemy enemy_list[] = new Enemy[20];
+	public Enemy enemy_list[] = new Enemy[50];
 	public int enemy_index = 0;
 	Timer enemy_spawn_timer = new Timer(2f, false);
 
@@ -91,7 +91,7 @@ public class Game {
 	}
 
 	public void logic() {
-		delta_time = real_delta_time * Math.max(0, 1 - player_die_timer.percentageDone() * 0.8f);
+		delta_time = real_delta_time * Math.max(0, 1 - player_die_timer.percentageDone() * 1.f);
 
 		if (!player.is_alive())
 			player_die_timer.logic();
@@ -184,7 +184,7 @@ public class Game {
 			for(int x=0; x<w*s; x++) for(int y=0; y<h*s; y++) img.setRGB(x, y, 0x00000000);
 			img.getGraphics().drawImage(Art.logo_ripple, 0, 0, w*s, h*s, null);
 
-			values = new float[] {1f, 1f, 1f, Math.min(1, logo_alpha) * (float)GameMath.getRndDouble()};
+			values = new float[] {1f, 1f, 1f, Math.min(1, logo_alpha)*0.7f + 0.3f * (float)GameMath.getRndDouble()};
 			rop = new RescaleOp(values, offset, null);
 
 			((Graphics2D) g).drawImage(img, rop, Dash_component.GAME_W / 2 - (w/2) * s, 40);

@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class Effect_ring extends Effect {
 	float x, y,
-		size;
+		size, xmulti = 1, ymulti = 1;
 
 	Timer timer;
 
@@ -19,6 +19,16 @@ public class Effect_ring extends Effect {
 		this.x = x;
 		this.y = y;
 		this.size = size;
+		timer = new Timer(t, false);
+	}
+
+	public Effect_ring(float x, float y, float size, float xmulti, float ymulti, float t, Game game) {
+		super(game);
+		this.x = x;
+		this.y = y;
+		this.size = size;
+		this.xmulti = xmulti;
+		this.ymulti = ymulti;
 		timer = new Timer(t, false);
 	}
 
@@ -31,6 +41,6 @@ public class Effect_ring extends Effect {
 		float r = (1 - factor) * size;
 
 		g.setColor(new Color(1f, 1f, 1f, 1 - timer.percentageDone()));
-		g.drawOval((int)(x - r) - game.game_screen.get_x(), (int)(y - r) - game.game_screen.get_y(), (int)(r*2), (int)(r*2));
+		g.drawOval((int)(x - r*xmulti) - game.game_screen.get_x(), (int)(y - r*ymulti) - game.game_screen.get_y(), (int)(r*2*xmulti), (int)(r*2*ymulti));
 	}
 }

@@ -179,7 +179,7 @@ public class Player extends Actor {
 		if (!is_on_ground()) {
 			if (air_slide_points <= 0) return;
 
-			xspeed = slide_force * dir * 0.8f;
+			xspeed = slide_force * dir;
 			yspeed = 0;
 			game.add_effect(new Effect_dust(get_center_x(), get_center_y(), (float)GameMath.getDirection(0, 0, xspeed, yspeed), 3f, 30, 1f, game));
 			gravity_immunity = 0.2f;

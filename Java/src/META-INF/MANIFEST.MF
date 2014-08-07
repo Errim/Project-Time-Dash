@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: com.ludumdare.Dash_component
-
+Name: Time-Dash
+Created-By: Emil&Emil
