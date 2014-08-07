@@ -26,6 +26,12 @@ public class Environment {
 	public int find_tile(float x, float y) {
 		return get_tile((int)(x / tile_width), (int)(GameMath.mod(y, 0, num_high * tile_height) / tile_height));
 	}
+	public int get_tile_wrapped(int x, int y) {
+		if (x < 0 || x >= num_wide) return -1;
+
+		y = (int)GameMath.mod(y, num_high);
+		return get_tile(x, y);
+	}
 	public int get_x(int tile) {
 		return get_xth(tile) * tile_width;
 	}
@@ -45,9 +51,24 @@ public class Environment {
 	public void draw(Graphics g) {
 		draw_background(g);
 
+		int xx = (int)Math.floor((double)game.game_screen.get_x() / tile_width),
+				yy = (int)Math.floor((double)game.game_screen.get_y() / tile_height),
+				w = Dash_component.GAME_W / tile_width + 2,
+				h = Dash_component.GAME_H / tile_height + 2;
+
+		for(int x=xx; x<xx+w; x++)
+			for(int y=yy; y<yy+h; y++) {
+				int i = get_tile_wrapped(x, y);
+
+				if (i != -1 && tiles[i] == 1) {
+					draw_tile(x, y, g);
+				}
+			}
+
+		/*
 		for (int i = 0 ; i < tiles.length ; i++) {
 			if (tiles[i] != 0) { draw_tile(g, i); }
-		}
+		} */
 	}
 	public void draw_background(Graphics g) {
 		int offset_x = (int)GameMath.mod(-game.game_screen.get_x() * 1f, tile_width) - tile_width,
@@ -90,7 +111,7 @@ public class Environment {
 	private int get_yth(int tile) {
 		return tile / num_wide;
 	}
-	private void draw_tile(Graphics g, int tile) {
-		Art.tileset.drawTile(get_x(tile) - game.game_screen.get_x(), get_y(tile) - game.game_screen.get_y(), 0, 0, g);
+	private void draw_tile(int x, int y, Graphics g) {
+		Art.tileset.drawTile(x * tile_width - game.game_screen.get_x(), y * tile_width - game.game_screen.get_y(), 0, 0, g);
 	}
 }
