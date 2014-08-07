@@ -61,24 +61,22 @@ public class Actor extends Entity {
 			yspeed += GRAVITY_FACTOR * gravity_multi * Game.delta_time;
 		}
 
-		float x_new = x + xspeed * Game.delta_time;
-		float y_new = y + yspeed * Game.delta_time;
+		float x_diff = xspeed * Game.delta_time;
+		float y_diff = yspeed * Game.delta_time;
 
 		if (collision) {
-			if (!game.environment.collision(x_new, y, width, height)) { x = x_new; }
-			else {
-				x += minabs(game.environment.dist_x(x, x_new, y), game.environment.dist_x(x + width - 1, x_new, y));
+			while (game.environment.collision(x + x_diff, y, width, height) && x_diff != 0) {
+				x_diff = x_diff <= 0.1f ? 0 : x_diff / 2;
 				xspeed = 0;
 			}
-			if (!game.environment.collision(x, y_new, width, height)) { y = y_new; }
-			else {
-				y += minabs(game.environment.dist_y(y, x, y_new), game.environment.dist_y(y + height - 1, x, y_new));
+			while (game.environment.collision(x, y + y_diff, width, height) && y_diff != 0) {
+				y_diff = y_diff <= 0.1f ? 0 : y_diff / 2;
 				yspeed = 0;
 			}
-		} else {
-			x = x_new;
-			y = y_new;
 		}
+
+		x += x_diff;
+		y += y_diff;
 	}
 
 	public void draw(Graphics g) {
